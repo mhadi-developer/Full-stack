@@ -1,12 +1,20 @@
 body{
     margin: 0;
-    background-color: beige;
+    background-color: #100013  ;
+    color: #CFCFCF;
 
+}
+tbody{
+  color: #AFA4B8;
+}
+.bg-custom{
+  background-color: #AFA4B8  !important;
 }
 
 .card{
     min-height: 100%;
     margin-block: 1rem;
+    background-color: #CFCFCF      ;
 }
 .card-img{
   

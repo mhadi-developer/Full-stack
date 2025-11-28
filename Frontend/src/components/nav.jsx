@@ -23,7 +23,7 @@ const {cart, setCart}=useContext(CartContext);
 
   return <>
   <div className="navbar-wrapper">
-      <nav className="navbar navbar-expand-lg navbar-light bg-success">
+      <nav className="navbar navbar-expand-lg navbar-light bg-custom">
   <div className="container">
     <Link className="navbar-brand" to="/">E-Shop</Link>
     <button className="navbar-toggler" type="button" onClick={handelToggle} data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

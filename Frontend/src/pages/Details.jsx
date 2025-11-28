@@ -4,6 +4,7 @@ import { useParams } from 'react-router'
 
 const Details = () => {
     const {slug} = useParams() 
+   // eslint-disable-next-line no-undef
    let item= products.find((item)=>{
       return item.slug==slug
     })

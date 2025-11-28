@@ -75,7 +75,7 @@ const Cart = () => {
 
               <td>
                 <div className='d-flex'>
-                  <button className='btn btn-dark' onClick={() => handelQtyDecrement(item)}>-</button>
+                  <button className='btn bg-custom' onClick={() => handelQtyDecrement(item)}>-</button>
 
                   <input
                     type="number"
@@ -85,7 +85,7 @@ const Cart = () => {
                     style={{ width: '50px' }}
                   />
 
-                  <button className='btn btn-dark' onClick={() => handelQtyIncrement(item)}>+</button>
+                  <button className='btn bg-custom' onClick={() => handelQtyIncrement(item)}>+</button>
                 </div>
               </td>
 
