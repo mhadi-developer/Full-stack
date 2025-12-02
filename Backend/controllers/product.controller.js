@@ -1,9 +1,22 @@
 export const getAllProducts = (req,res)=>{
-  res.json({message:'product endpoint called'})
+   const qData = req.query;
+  res.json({message:'product endpoint called',
+    qData:qData
+  })
+
+  console.log(qData);
+  
+   
 }
 
 export const getProductsById = (req,res)=>{
-  res.json({message:'single product endpoint called'})
+  const paramData =req.params;
+  res.json({message:'single product endpoint called',
+    paramData:paramData
+  })
+
+  console.log(paramData);
+  
 }
 
 export const updateProduct = (req,res)=>{
@@ -11,4 +24,12 @@ export const updateProduct = (req,res)=>{
 }
 export const deleteProduct = (req,res)=>{
   res.json({message:' product delete endpoint called'})
+}
+export const createProduct = (req,res)=>{
+  const sendData = req.body;
+  res.json({message:'creste product is called',
+    data:sendData
+  })
+  
+  console.log(sendData);
 }
