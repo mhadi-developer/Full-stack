@@ -9,6 +9,8 @@ import NotFound from './pages/NotFound';
 import Details from './pages/Details';
 import { createContext, useState, useEffect } from 'react';
 import Contact from './pages/Contact';
+import Topbar from './components/Topbar';
+import Footer from './components/Footer';
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -32,18 +34,20 @@ function App() {
 
   return (
     <CartContext.Provider value={{ cart, setCart }}>
+      <Topbar />
+      <Nav />
       <BrowserRouter>
-        <Nav />
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path='/products/:slug' element={<Details />} />
-          <Route path='*' element={<NotFound />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/products/:slug" element={<Details />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+          <Footer />
     </CartContext.Provider>
   );
 }

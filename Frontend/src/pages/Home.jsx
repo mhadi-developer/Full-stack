@@ -2,6 +2,13 @@ import React from 'react'
 import ProductCard from '../components/ProductCard'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import Carousel from '../components/Carousel'
+import Features from '../components/Features'
+import Categories from '../components/Catagories'
+import FeatureProducts from '../components/FeatureProducts'
+import SpecialOffer from '../components/SpecialOffer'
+import RecentProducts from '../components/RecentProducts'
+
 
 const Home = () => {
 
@@ -63,27 +70,17 @@ const handelSearchPrice = ()=>{
 
   return (
     <div>
-        
-       <div className="container">
-        <input type="search" className='mt-5 mb-3 form-control' style={{width:'50%', border:'1px solid green'}} onChange={handelSearch}  placeholder='search'/>
-        <button className='btn btn-success' onClick={handelSearch}>Search</button>
+     
+      <Carousel />
+      <Features />
+      <Categories />
+      <FeatureProducts />
+      <SpecialOffer />
+      <RecentProducts />
+  
 
-          <input type="search" className='mt-5 mb-3 form-control' placeholder='search by rating' style={{width:'50%', border:'1px solid green'}} onChange={handelRatingSearch}/>
 
 
-          <input type="text"  className='my-2 mx-2 form-control p-1' placeholder='minimum price' style={{width:'20%',border:'1px solid green'}} onChange={priceMinimum} />
-          <button className='btn btn-success my-1 mx-3' onClick={handelSearchPrice}>Filter by Price</button>
-           <input type="text"  className='my-2 mx-2 form-control p-1' placeholder='maximum price' style={{width:'20%',border:'1px solid green'}} onChange={priceMaximum} />
-    <div className="row">
-      {
-        products.map(product=>(
-          <div className="col-md-4">
-           <ProductCard product={product}/>
-      </div>
-        ))
-      }
-    </div>
-  </div>
     </div>
   )
 }
