@@ -6,9 +6,9 @@ const Cart = () => {
   const { cart, setCart } = useContext(CartContext)
 
   const handelDelete = (id) => {
-    let updatedCart = cart.filter(c => c.id !== id)
+    let updatedCart = cart.filter(c => c._id !== id)
     setCart(updatedCart)
-  }   //handelremove function
+  }   //handel-remove function
 
   const handelClearCart = () => {
     setCart([])
@@ -18,7 +18,7 @@ const Cart = () => {
     const value = parseInt(e.target.value) || 1
 
     const updated = cart.map(c => {
-      if (c.id === item.id) {
+      if (c._id === item._id) {
         return { ...c, quantity: value }
       }
       return c
@@ -28,7 +28,7 @@ const Cart = () => {
 
   const handelQtyIncrement = (item) => {
     const updated = cart.map(c => {
-      if (c.id === item.id) {
+      if (c._id === item._id) {
         return { ...c, quantity: c.quantity + 1 }
       }
       return c
@@ -38,7 +38,7 @@ const Cart = () => {
 
   const handelQtyDecrement = (item) => {
     const updated = cart.map(c => {
-      if (c.id === item.id) {
+      if (c._id === item._id) {
         const newQty = c.quantity - 1
         return { ...c, quantity: newQty > 1 ? newQty : 1 }
       }
@@ -68,7 +68,7 @@ const Cart = () => {
 
         <tbody>
           {cart.map(item => (
-            <tr key={item.id} style={{ marginBlock: '1rem', border: '1px solid black', padding: '20px 40px' }}>
+            <tr key={item._id} style={{ marginBlock: '1rem', border: '1px solid black', padding: '20px 40px' }}>
               <td><img width={50} src={item.image} alt="" /></td>
               <td>{item.title}</td>
               <td>{item.price}</td>
@@ -94,7 +94,7 @@ const Cart = () => {
               <td>
                 <button
                   className='btn btn-danger'
-                  onClick={() => handelDelete(item.id)} >
+                  onClick={() => handelDelete(item._id)} >
                   <i className="bi bi-trash-fill"></i>
                 </button>
               </td>
@@ -111,4 +111,4 @@ const Cart = () => {
   )
 }
 
-export default Cart
+export default Cart;

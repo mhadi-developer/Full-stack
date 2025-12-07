@@ -1,9 +1,9 @@
-import ProductModal from '../Product-modal/product-modal.js'
+import {ProductModal} from '../Product-modal/product-modal.js'
 
 export const getAllProducts = async (req,res)=>{
   const products = await ProductModal.find({})
-  res.json({message:'product endpoint called', products
-  })} // fetch all products from database
+  res.json(products);
+  } // fetch all products from database
 
 export const getProductsById = async (req,res)=>{
   const {id} = req.params;

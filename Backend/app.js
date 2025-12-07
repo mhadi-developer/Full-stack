@@ -3,13 +3,13 @@ import 'dotenv/config';
 import router from './routes/product.routes.js';
 import bodyParser from 'body-parser';
 import { connectDB } from './config/db.js';
+import cors from 'cors';
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 // JSON parsing middleware
 app.use(bodyParser.json());
-
 // Connect to MongoDB and then start server
 const startServer = async () => {
   try {
@@ -17,7 +17,9 @@ const startServer = async () => {
     console.log('MongoDB connected');
 
     // Mount routes **after DB is connected**
-    app.use('/api/',router);
+    app.use(cors());
+    app.use('/api/', router);
+
 
     app.listen(port, () => {
       console.log('Server is online');
