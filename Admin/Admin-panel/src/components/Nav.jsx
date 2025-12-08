@@ -34,7 +34,7 @@ const Nav = () => {
                 <div className="d-flex align-items-center">
                   <img
                     className="rounded-circle"
-                    src="img/user.jpg"
+                    src="assest/img/user.jpg"
                     alt=""
                     style={{ width: "40px", height: "40px" }}
                   />
@@ -49,7 +49,7 @@ const Nav = () => {
                 <div className="d-flex align-items-center">
                   <img
                     className="rounded-circle"
-                    src="img/user.jpg"
+                    src="assest/img/user.jpg"
                     alt=""
                     style={{ width: "40px", height: "40px" }}
                   />
@@ -64,7 +64,7 @@ const Nav = () => {
                 <div className="d-flex align-items-center">
                   <img
                     className="rounded-circle"
-                    src="img/user.jpg"
+                    src="assest/img/user.jpg"
                     alt=""
                     style={{ width: "40px", height: "40px" }}
                   />
@@ -118,7 +118,7 @@ const Nav = () => {
             >
               <img
                 className="rounded-circle me-lg-2"
-                src="img/user.jpg"
+                src="assest/img/user.jpg"
                 alt=""
                 style={{ width: "40px", height: "40px" }}
               />

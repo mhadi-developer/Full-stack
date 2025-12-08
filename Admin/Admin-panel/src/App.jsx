@@ -2,18 +2,28 @@ import './App.css'
 import Nav from './components/Nav.jsx';
 import { SideBar } from './components/SideBar.jsx';
 import Home from './pages/Home.jsx'
+import AddProductForm from './pages/AddProductForm.jsx';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+
+
 
 function App() {
 
 
   return (
     <div className="container-fluid position-relative d-flex p-0">
+      <BrowserRouter>
       <SideBar />
       <div className="content">
         <Nav />
-        <Home />
-        
-      </div>
+        <Routes>
+            <Route path='/home' element={<Home />} />
+            <Route path='/add-product' element={<AddProductForm />} />
+            
+        </Routes>
+        </div>
+        </BrowserRouter>
     </div>
   );
 }
