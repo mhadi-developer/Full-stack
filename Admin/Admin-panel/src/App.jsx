@@ -18,7 +18,7 @@ function App() {
       <div className="content">
         <Nav />
         <Routes>
-            <Route path='/home' element={<Home />} />
+            <Route path='/' element={<Home />} />
             <Route path='/add-product' element={<AddProductForm />} />
             
         </Routes>
