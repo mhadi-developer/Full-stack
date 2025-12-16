@@ -6,7 +6,7 @@ export const SideBar = () => {
       <div>
             <div className="sidebar pe-4 pb-3">
             <nav className="navbar bg-secondary navbar-dark">
-                <Link to="/home" className="navbar-brand mx-4 mb-3">
+                <Link to="/" className="navbar-brand mx-4 mb-3">
                     <h3 className="text-primary"><i className="fa fa-user-edit me-2"></i>MultiShope</h3>
                 </Link>
                 <div className="d-flex align-items-center ms-4 mb-4">
@@ -20,12 +20,12 @@ export const SideBar = () => {
                     </div>
                 </div>
                 <div className="navbar-nav w-100">
-                    <Link to="/home" className="nav-item nav-link active"><i className="fa fa-tachometer-alt me-2"></i>Dashboard</Link>
+                    <Link to="/" className="nav-item nav-link active"><i className="fa fa-tachometer-alt me-2"></i>Dashboard</Link>
                     <div className="nav-item dropdown">
-                        <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i className="fa fa-laptop me-2"></i>Manage Products</a>
+                        <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i className="fa fa-laptop me-2"></i>Manage Products & Categories</a>
                         <div className="dropdown-menu bg-transparent border-0">
                             <Link to="/add-product" className="dropdown-item">Add New Product</Link>
-
+                            <Link to="/add-category" className="dropdown-item">Add New Category</Link>
                         </div>
                     </div>
                     <a href="widget.html" className="nav-item nav-link"><i className="fa fa-th me-2"></i>Widgets</a>

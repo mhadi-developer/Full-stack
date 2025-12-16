@@ -1,4 +1,4 @@
-import {ProductModal} from '../Product-modal/product-modal.js'
+import {ProductModal} from '../Modals/Product-modal/product-modal.js'
 
 export const getAllProducts = async (req,res)=>{
   const products = await ProductModal.find({})

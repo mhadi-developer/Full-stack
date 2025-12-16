@@ -152,7 +152,8 @@ export default function AddProductForm() {
 
     console.log("FORM DATA:", data);
     for (const pair of formData.entries()) console.log(pair[0], pair[1]);
-    alert("Product submitted. Check console for FormData.");
+    console.log('form submitted successfully');
+    
   };
 
   useEffect(() => {
@@ -176,6 +177,7 @@ export default function AddProductForm() {
         </div>
 
         {/* Long Description with RichTextEditor */}
+        <label className="form-label mt-3">Long Description</label>
         <Controller
           control={control}
           name="longDescription"
@@ -228,6 +230,7 @@ export default function AddProductForm() {
           <MultiSelect
             options={sizeOptions}
             value={selectedSizes}
+            className="bg-secondary"
             onChange={(selected) =>
               setValue("sizes", selected, { shouldValidate: true })
             }

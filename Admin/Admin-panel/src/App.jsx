@@ -3,6 +3,7 @@ import Nav from './components/Nav.jsx';
 import { SideBar } from './components/SideBar.jsx';
 import Home from './pages/Home.jsx'
 import AddProductForm from './pages/AddProductForm.jsx';
+import AddCategoryForm from './pages/AddCategoryForm.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 
@@ -20,6 +21,7 @@ function App() {
         <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/add-product' element={<AddProductForm />} />
+            <Route path= '/add-category' element={<AddCategoryForm />} />
             
         </Routes>
         </div>
