@@ -40,25 +40,35 @@ export const deleteCategory = async (req, res) => {
 
 export const createCategory = async (req, res) => {
   
-  const data = req.body;
+  const {title , isPublic} = req.body;
   const fileData = req.file;
-  
-  console.log(" hello you have called add category endpoint");
+  const img = {
+    public_id: fileData.filename,
+    secure_url: fileData.path
+  };
+
+  const data = {
+    title,
+    image: img,
+    isPublic:isPublic
+  }
+
+
+   
+
+  await CategoryModal.create(data);
+
+  console.log(" Category added");
   console.log(`Recieved data ${JSON.stringify(data)}`);
-  console.log(`recieved image ${JSON.stringify(fileData)}`);
-  
+ 
    return res.status(200).json({
      success: true,
      message: "Category created",
    });
   
-  // const sendData = req.body;
 
 
-  // await CategoryModal.create(sendData);
-  // res.json({message:'create category is called',
-  //   data:sendData
-  // console.log(sendData);
+ 
 }
   //  // create new category in database
 

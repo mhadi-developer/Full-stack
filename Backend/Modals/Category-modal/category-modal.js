@@ -35,8 +35,6 @@ categorySchema.pre("save", function (next) {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
-
-  next();
 });
 
 const Category =

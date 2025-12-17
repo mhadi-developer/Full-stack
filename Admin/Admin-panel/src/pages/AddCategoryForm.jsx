@@ -1,8 +1,9 @@
 // JSX version (.jsx)
-import React, { useState } from "react";
+import React, { useRef,useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+  import { ToastContainer, toast } from "react-toastify";
 
 // ---------------- Zod Schema ----------------
 const categorySchema = z.object({
@@ -11,10 +12,13 @@ const categorySchema = z.object({
 });
 
 export default function AddCategoryForm() {
+  const fileInputRef = useRef();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({
     resolver: zodResolver(categorySchema),
     defaultValues: {
@@ -22,6 +26,8 @@ export default function AddCategoryForm() {
       isPublic: true,
     },
   });
+
+  
 
   const [image, setImage] = useState(null);
 
@@ -44,7 +50,8 @@ export default function AddCategoryForm() {
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
-try {
+    try {
+      setLoading(true); //loader
   const res = await fetch("http://localhost:7000/category/add", {
     method: "POST",
     body: formData,
@@ -54,14 +61,22 @@ try {
     throw new Error(`Request failed with status ${res.status}`);
   }
 
-  const data = await res.json();
-  console.log("Success:", data);
+      const data = await res.json();
+       toast.success('category added succeesfully',res.message);
+      console.log("Success:", data);
+      setLoading(false); // loader
+      reset();
+      fileInputRef.current.value = "";
+
 } catch (error) {
-  console.error("Request error:", error.message);
+      console.error("Request error:", error.message);
+      toast.error(`the image is not uploaded.`)
 }
 
+   
     
   }
+   
 
   return (
     <div className="container mt-4 mb-5 p-5">
@@ -94,6 +109,11 @@ try {
             className="form-control"
             accept="image/*"
             onChange={handleImageChange}
+            ref={(e) => {
+              register("image").ref(e);
+              fileInputRef.current = e;
+            }}
+        
           />
 
           {image && (
@@ -129,9 +149,25 @@ try {
         </div>
 
         {/* SUBMIT BUTTON */}
-        <button type="submit" className="btn btn-primary w-100">
-          Add Category
+        <button
+          type="submit"
+          className="btn btn-primary w-100"
+          disabled={loading}
+        >
+          {loading ? "Saving" : "Add Category"}
         </button>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </form>
     </div>
   );
