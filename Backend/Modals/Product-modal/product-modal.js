@@ -1,27 +1,98 @@
-import mongoose from "mongoose"
-const productSchema = new mongoose.Schema({
-    title: String,
-    slug: String,
-    price:Number,
-    description: String,
-    category:String,
-    image: String,
-    rating: {
-        rate: Number,
-        count:Number
-    }
-})
-export const ProductModal = mongoose.model('Product', productSchema);
+import mongoose from "mongoose";
 
+// Sub-schema for image
+const imageSchema = new mongoose.Schema({
+  public_id: { type: String, required: true },
+  secure_url: { type: String, required: true },
+});
 
+// Sub-schema for size/color
+const optionSchema = new mongoose.Schema({
+  label: { type: String, required: true },
+  value: { type: String, required: true },
+});
 
+const productSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    sku: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    shortDescription: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    longDescription: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    discount: {
+      type: Number,
+      min: 0,
+      max: 90,
+      default: 0,
+    },
+    discountPrice: {
+      type: Number,
+      min: 0,
+    },
+    stock: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    sizes: {
+      type: [optionSchema], // array of { label, value }
+      default: [],
+    },
+    colors: {
+      type: [optionSchema], // array of { label, value }
+      default: [],
+    },
+    videoLink: {
+      type: String,
+      default: "",
+    },
+    mainImage: {
+      type: imageSchema,
+      required: true,
+    },
+    galleryImages: {
+      type: [imageSchema], // array of images
+      default: [],
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true, // adds createdAt and updatedAt automatically
+  }
+);
 
-    // "id": 1,
-    // "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-    // "price": 109.95,
-    // "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-    // "category": "men's clothing",
-    // "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png",
-    // "rating": {
-    //   "rate": 3.9,
-    //   "count": 120
+export default mongoose.model("Product", productSchema);

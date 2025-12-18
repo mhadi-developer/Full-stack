@@ -3,7 +3,7 @@
 .rmsc .dropdown-list {
     background-color: #f8f9fa !important;
     /* light gray like Bootstrap */
-    border: 1px solid #ced4da;
+    border: 1px solid #ced4da !important;
     border-radius: 5px;
 }
 
@@ -12,12 +12,12 @@
 }
 
 .rmsc .dropdown-item:hover {
-    background-color: #e9ecef;
+    background-color: #e9ecef !important;
 }
 
 .rmsc-selected-item {
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
+    background-color: #ffffff !important;
+    border: 1px solid #ced4da !important;
     border-radius: 4px;
     padding: 0.2rem 0.4rem;
     margin: 2px;

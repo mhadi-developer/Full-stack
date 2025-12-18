@@ -32,14 +32,38 @@ export const deleteProduct = async (req, res) => {
 } // delete product by id in database
 
 
-export const createProduct = async (req,res)=>{
+export const createProduct = async (req, res) => {
   const sendData = req.body;
-  await ProductModal.create(sendData);
-  res.json({message:'create product is called',
-    data:sendData
+  const images = req.files;
+
+  const mainImage = {
+    public_id: images.mainImage[0].filename,
+    secure_url: images.mainImage[0].path
+  };
+
+  const galleryImages = images.galleryImages.map((gImageObj) => {
+    return {
+      public_id: gImageObj.filename,
+      secure_url: gImageObj.path
+    };  // map will check all the images which are recieving as a object and make it available in gImgObj 
+    // and in all iterations return filename , and path from the recieve object from front end , to match with DB schema
   })
-  console.log(sendData);
-} // create new product in database
+
+
+
+  console.log("*******recieved form data", sendData);
+  
+  console.log("***********backend log main image", mainImage);
+  console.log("***********backend gallery images", galleryImages);
+  
+  
+  await ProductModal.create(sendData);
+  res.json({
+    message: 'create product is called',
+   
+  })
+}
+// } // create new product in database
 
 
 
