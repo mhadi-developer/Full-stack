@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDropzone } from "react-dropzone";
 import MultiSelect from "react-multi-select-component";
 import RichTextEditor from "../components/TipTap-Editor/RichTextEditor.jsx";
-
+  import { ToastContainer, toast } from "react-toastify";
 // -------------------- ZOD SCHEMA --------------------
 const productSchema = z.object({
   title: z.string().min(1, "Product title is required"),
@@ -21,7 +21,7 @@ const productSchema = z.object({
   price: z.number().min(1, "Price must be greater than 0"),
   discount: z.number().min(0).max(90).optional(),
   discountPrice: z.number().optional(),
-  category: z.string().min(1, "Category is required"),
+  category: z.string().min(1, "Category is required"), // dropdown value (_id or slug)
   stock: z.number().min(0, "Stock must be valid"),
   sizes: z
     .array(z.object({ label: z.string(), value: z.string() }))
@@ -33,8 +33,9 @@ const productSchema = z.object({
 });
 
 export default function AddProductForm() {
+  const [submitloader, setSubmitLoader] = useState(false)
   const mainImageRef = useRef(null);
-
+  const [categories, setCategories] = useState([]);
   const {
     register,
     handleSubmit,
@@ -137,17 +138,18 @@ export default function AddProductForm() {
     formData.append("shortDescription", submitData.shortDescription);
     formData.append("longDescription", submitData.longDescription);
     formData.append("price", String(submitData.price));
-    formData.append("discount %", String(submitData.discount ?? 0));
-    formData.append("discountPrice", String(submitData.discountPrice));
+    formData.append("discount %", submitData.discount);
+    formData.append("discountPrice", submitData.discountPrice);
     formData.append("stock", String(submitData.stock));
     formData.append("category", submitData.category);
 
     // Sizes and Colors
-    (submitData.sizes || []).forEach((item) =>
-      formData.append("sizes", item.value)
+    submitData.sizes.forEach((item) =>
+      formData.append("sizes", JSON.stringify(item))
     );
-    (submitData.colors || []).forEach((item) =>
-      formData.append("colors", item.value)
+
+    submitData.colors.forEach((item) =>
+      formData.append("colors", JSON.stringify(item))
     );
 
     if (submitData.videoLink)
@@ -159,8 +161,10 @@ export default function AddProductForm() {
     const res = await fetch("http://localhost:7000/products/add", {
       method: "POST",
       body: formData,
-    });
+    }); setSubmitLoader(true);
+    
     const result = await res.json();
+      toast.success('Product added succeesfully',result.message);
     console.log("Server Response:", result);
 
     // Debugging: log all FormData entries
@@ -180,6 +184,7 @@ export default function AddProductForm() {
     reset();
     removeMainImage();
     setGalleryImages([]);
+    setSubmitLoader(false)
   };
 
   // ----------------- Cleanup -----------------
@@ -189,6 +194,22 @@ export default function AddProductForm() {
       galleryImages.forEach((img) => URL.revokeObjectURL(img.url));
     };
   }, [mainImage, galleryImages]);
+
+
+
+  // Categories data fetching from MongoDB;
+
+  useEffect(() => {
+    const getAllCategories = async () => {
+      const response = await fetch('http://localhost:7000/categories') 
+      const data = await response.json();
+      console.log(data);
+      setCategories(data);
+      
+    }
+    getAllCategories();
+  }, [])
+  // categories data set in MongoDB , from Categories form page
 
   // ----------------- Render -----------------
   return (
@@ -291,11 +312,17 @@ export default function AddProductForm() {
         {/* Category */}
         <div className="mb-3">
           <label className="form-label">Category</label>
-          <input
-            type="text"
-            className="form-control"
-            {...register("category")}
-          />
+
+          <select className="form-select" {...register("category")}>
+            <option value="">Select a category</option>
+
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.title}
+              </option>
+            ))}
+          </select>
+
           {errors.category && (
             <small className="text-danger">{errors.category.message}</small>
           )}
@@ -334,9 +361,9 @@ export default function AddProductForm() {
         <div className="mb-3">
           <label className="form-label">Colors</label>
           <MultiSelect
+            className="form-control"
             options={colorOptions}
             value={selectedColors}
-            className="form-control"
             onChange={(selected) =>
               setValue("colors", selected, { shouldValidate: true })
             }
@@ -430,9 +457,21 @@ export default function AddProductForm() {
         </div>
 
         {/* Submit */}
-        <button type="submit" className="btn btn-primary w-50 mt-4">
-          Submit Product
+        <button type="submit" className="btn btn-primary w-50 mt-4" disabled={submitloader}>
+         {submitloader? 'Submitng...':'Add product'}
         </button>
+         <ToastContainer
+                  position="top-center"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+             />
       </form>
     </div>
   );

@@ -4,13 +4,13 @@ import mongoose from "mongoose";
 const imageSchema = new mongoose.Schema({
   public_id: { type: String, required: true },
   secure_url: { type: String, required: true },
-});
+}, { _id:false });
 
 // Sub-schema for size/color
 const optionSchema = new mongoose.Schema({
   label: { type: String, required: true },
   value: { type: String, required: true },
-});
+},{_id:false});
 
 const productSchema = new mongoose.Schema(
   {
@@ -46,7 +46,7 @@ const productSchema = new mongoose.Schema(
       min: 0,
     },
     discount: {
-      type: Number,
+      type: String,
       min: 0,
       max: 90,
       default: 0,
@@ -61,7 +61,7 @@ const productSchema = new mongoose.Schema(
       min: 0,
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       trim: true,
     },
