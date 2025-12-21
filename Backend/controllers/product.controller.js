@@ -15,6 +15,22 @@ export const getProductsById = async (req,res)=>{
   })
 } // fetch single product by id from database
 
+
+export const getProductsBySlug = async (req,res)=>{
+  const {slug} = req.params;
+ const product = await ProductModal.find({slug});
+
+  res.json({
+    message: 'single product endpoint called',
+    product
+  })
+} // fetch single product by slug from database
+
+
+
+
+
+
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
   const data = req.body;

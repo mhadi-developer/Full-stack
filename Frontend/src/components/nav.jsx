@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { CartContext } from "../App.jsx";
 import { useContext } from "react";
@@ -11,6 +11,20 @@ import { useContext } from "react";
 
 export default function Nav() {
 
+
+    const [categories, setCategires] = useState([]);
+  
+    useEffect(() => {
+      const getAllCategories = async () => {
+        const response = await fetch("http://localhost:7000/categories");
+        const data = await response.json();
+        console.log(data);
+        setCategires(data);
+        
+      }
+      getAllCategories();
+  },[])
+  
 
 const {cart, setCart}=useContext(CartContext);
 
@@ -44,53 +58,11 @@ const {cart, setCart}=useContext(CartContext);
                 style={{ width: "calc(100% - 30px)", zIndex: "999" }}
               >
                 <div className="navbar-nav w-100">
-                  <div className="nav-item dropdown dropright">
-                    <a
-                      href="#"
-                      className="nav-link active dropdown-toggle"
-                      data-toggle="dropdown"
-                    >
-                      Dresses <i className="fa fa-angle-right float-right mt-1"></i>
+                  {categories.map((cat, index) => (
+                    <a href="" className="nav-item nav-link">
+                      {cat.title}
                     </a>
-                    <div className="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                      <a href="" className="dropdown-item">
-                        Men's Dresses
-                      </a>
-                      <a href="" className="dropdown-item">
-                        Women's Dresses
-                      </a>
-                      <a href="" className="dropdown-item">
-                        Baby's Dresses
-                      </a>
-                    </div>
-                  </div>
-                  <a href="" className="nav-item nav-link">
-                    Shirts
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Jeans
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Swimwear
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Sleepwear
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Sportswear
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Jumpsuits
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Blazers
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Jackets
-                  </a>
-                  <a href="" className="nav-item nav-link">
-                    Shoes
-                  </a>
+                  ))}
                 </div>
               </nav>
             </div>
@@ -117,9 +89,9 @@ const {cart, setCart}=useContext(CartContext);
                   id="navbarCollapse"
                 >
                   <div className="navbar-nav mr-auto py-0">
-                    <a href="index.html" className="nav-item nav-link active">
+                    <Link to="/" className="nav-item nav-link active">
                       Home
-                    </a>
+                    </Link>
                     <a href="shop.html" className="nav-item nav-link">
                       Shop
                     </a>
@@ -161,7 +133,8 @@ const {cart, setCart}=useContext(CartContext);
                       <i className="fas fa-shopping-cart text-primary"></i>
                       <span
                         className="badge text-secondary border border-secondary rounded-circle"
-                        style={{ paddingBottom: "2px" }}>
+                        style={{ paddingBottom: "2px" }}
+                      >
                         0
                       </span>
                     </a>
@@ -173,5 +146,5 @@ const {cart, setCart}=useContext(CartContext);
         </div>
       </div>
     </>
-  )
+  );
 }

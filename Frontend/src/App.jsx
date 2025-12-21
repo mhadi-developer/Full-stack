@@ -34,9 +34,9 @@ function App() {
 
   return (
     <CartContext.Provider value={{ cart, setCart }}>
-      <Topbar />
-      <Nav />
       <BrowserRouter>
+        <Topbar />
+        <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -47,7 +47,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-          <Footer />
+      <Footer />
     </CartContext.Provider>
   );
 }

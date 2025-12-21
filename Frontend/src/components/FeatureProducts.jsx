@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Product data
 // const products = [
 //   {
@@ -66,49 +67,54 @@
 //   },
 // ];
 
+
 import { useState } from "react";
 import { useEffect } from "react";
+import { Link } from "react-router";
 
 // Reusable card component
-function ProductCard({ mainImage, title, price, oldPrice, stars }) {
+function ProductCard({ mainImage, title, price, discountPrice, stars,slug }) {
   // Convert rating number into FontAwesome stars
-  const renderStars = () => {
-    const full = Math.floor(stars);
-    const half = stars % 1 !== 0;
-    const empty = 5 - full - (half ? 1 : 0);
+ const StarRating = ({ value = 0, max = 5 }) => {
+   const full = Math.floor(value);
+   const half = value % 1 !== 0;
+   const empty = max - full - (half ? 1 : 0);
 
-    return (
-      <>
-        {/* {Array(full)
-          .fill(0)
-          .map((_, i) => (
-            <small
-              key={`f-${i}`}
-              className="fa fa-star text-primary mr-1"
-            ></small>
-          ))}
+   return (
+     <div
+       className="d-inline-flex align-items-center"
+       aria-label={`Rating: ${value} out of ${max}`}
+     >
+       {Array(full)
+         .fill(0)
+         .map((_, i) => (
+           <small key={`full-${i}`} className="fa fa-star text-primary mr-1" />
+         ))}
 
-        {half && (
-          <small className="fa fa-star-half-alt text-primary mr-1"></small>
-        )}
+       {half && <small className="fa fa-star-half-alt text-primary mr-1" />}
 
-        {Array(empty)
-          .fill(0)
-          .map((_, i) => (
-            <small
-              key={`e-${i}`}
-              className="far fa-star text-primary mr-1"
-            ></small>
-          ))} */}
-      </>
-    );
-  };
+       {Array(empty)
+         .fill(0)
+         .map((_, i) => (
+           <small
+             key={`empty-${i}`}
+             className="far fa-star text-primary mr-1"
+           />
+         ))}
+     </div>
+   );
+ };
+
 
   return (
     <div className="col-lg-3 col-md-4 col-sm-6 pb-1">
       <div className="product-item bg-light mb-4">
         <div className="product-img position-relative overflow-hidden">
-          <img src={mainImage?.secure_url} alt={name} className="img-fluid w-100" />
+          <img
+            src={mainImage?.secure_url}
+            alt={name}
+            className="img-fluid w-100"
+          />
 
           <div className="product-action">
             <a href="#" className="btn btn-outline-dark btn-square">
@@ -127,20 +133,20 @@ function ProductCard({ mainImage, title, price, oldPrice, stars }) {
         </div>
 
         <div className="text-center py-4">
-          <a href="#" className="h6 text-decoration-none text-truncate">
+          <Link to={`/products/${slug}`} className="h6 text-decoration-none">
             {title}
-          </a>
+          </Link>
 
           <div className="d-flex align-items-center justify-content-center mt-2">
-            <h5>${price}.00</h5>
+            <h5>PKR{discountPrice}.00</h5>
             <h6 className="text-muted ml-2">
-              <del>${oldPrice}.00</del>
+              <del>PKR{price}.00</del>
             </h6>
           </div>
-
+           
           <div className="d-flex align-items-center justify-content-center mb-1">
-            {renderStars()}
-            <small>(99)</small>
+            <StarRating value={4.5}/>
+           
           </div>
         </div>
       </div>

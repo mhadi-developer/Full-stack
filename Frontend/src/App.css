@@ -22,3 +22,7 @@
     background-color:#FFD333;
     z-index: -1;
 }
+.btn-primary:hover{
+    background-color:white;
+    color:#FFD333 !important;
+}

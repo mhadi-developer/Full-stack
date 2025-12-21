@@ -138,7 +138,7 @@ export default function AddProductForm() {
     formData.append("shortDescription", submitData.shortDescription);
     formData.append("longDescription", submitData.longDescription);
     formData.append("price", String(submitData.price));
-    formData.append("discount %", submitData.discount);
+    formData.append("discount", submitData.discount);
     formData.append("discountPrice", submitData.discountPrice);
     formData.append("stock", String(submitData.stock));
     formData.append("category", submitData.category);
@@ -161,7 +161,10 @@ export default function AddProductForm() {
     const res = await fetch("http://localhost:7000/products/add", {
       method: "POST",
       body: formData,
-    }); setSubmitLoader(true);
+    });
+
+    
+    setSubmitLoader(true);
     
     const result = await res.json();
       toast.success('Product added succeesfully',result.message);

@@ -1,19 +1,22 @@
-const categories = [
-  { img: "assesst/img/cat-1.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-2.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-3.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-4.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-4.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-3.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-2.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-1.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-2.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-1.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-4.jpg", title: "Category Name", products: "100 Products" },
-  { img: "assesst/img/cat-3.jpg", title: "Category Name", products: "100 Products" },
-];
+import { useEffect, useState } from "react";
 
 export default function Categories() {
+
+  const [categories, setCategires] = useState([]);
+
+  useEffect(() => {
+    const getAllCategories = async () => {
+      const response = await fetch("http://localhost:7000/categories");
+      const data = await response.json();
+      console.log(data);
+      setCategires(data);
+      
+    }
+    getAllCategories();
+},[])
+
+
+
   return (
     <div className="container-fluid pt-5">
       <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4">
@@ -29,12 +32,12 @@ export default function Categories() {
                   className="overflow-hidden"
                   style={{ width: "100px", height: "100px" }}
                 >
-                  <img className="img-fluid" src={cat.img} alt={cat.title} />
+                  <img className="img-fluid" src={cat.image.secure_url} alt={cat.title} />
                 </div>
 
                 <div className="flex-fill pl-3">
-                  <h6>{cat.title}</h6>
-                  <small className="text-body">{cat.products}</small>
+                  <h3>{cat.title}</h3>
+                  <small className="text-body">{cat.title}</small>
                 </div>
               </div>
             </a>
