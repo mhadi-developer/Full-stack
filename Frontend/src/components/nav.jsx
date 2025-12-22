@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { CartContext } from "../App.jsx";
 import { useContext } from "react";
+import { useFetch } from "../customHooks/useFetch.js";
 
 
 
@@ -12,19 +13,14 @@ import { useContext } from "react";
 export default function Nav() {
 
 
-    const [categories, setCategires] = useState([]);
-  
-    useEffect(() => {
-      const getAllCategories = async () => {
-        const response = await fetch("http://localhost:7000/categories");
-        const data = await response.json();
-        console.log(data);
-        setCategires(data);
-        
-      }
-      getAllCategories();
-  },[])
-  
+
+const {
+  data: categories,
+  error,
+  loading,
+} = useFetch("http://localhost:7000/categories"); 
+
+
 
 const {cart, setCart}=useContext(CartContext);
 
@@ -40,32 +36,36 @@ const {cart, setCart}=useContext(CartContext);
       <div className="navbar-wrapper">
         <div className="container-fluid bg-dark mb-30">
           <div className="row px-xl-5">
-            <div className="col-lg-3 d-none d-lg-block">
-              <a
+            <div className="col-lg-3 d-none d-lg-block position-relative">
+              <button
+                type="button"
                 className="btn d-flex align-items-center justify-content-between bg-primary w-100"
-                data-toggle="collapse"
-                href="#navbar-vertical"
-                style={{ height: "65px", padding: "0 30px" }}
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar-vertical"
+                aria-expanded="false"
+                aria-controls="navbar-vertical"
+                style={{ height: "65px", padding: "0px 30px" }}
               >
                 <h6 className="text-dark m-0">
-                  <i className="fa fa-bars mr-2"></i>Categories
+                  <i className="fa fa-bars me-2"></i> Categories
                 </h6>
                 <i className="fa fa-angle-down text-dark"></i>
-              </a>
+              </button>
               <nav
-                className="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light"
                 id="navbar-vertical"
-                style={{ width: "calc(100% - 30px)", zIndex: "999" }}
+                className="collapse position-absolute navbar navbar-light align-items-start p-0 bg-light"
+                style={{ width: "calc(100% - 30px)", zIndex: 999 }}
               >
-                <div className="navbar-nav w-100">
-                  {categories.map((cat, index) => (
-                    <a href="" className="nav-item nav-link">
+                <div className="navbar-nav dropdown w-100">
+                  {categories?.map((cat) => (
+                    <a key={cat._id} href="#" className="nav-item nav-link">
                       {cat.title}
                     </a>
                   ))}
                 </div>
               </nav>
             </div>
+
             <div className="col-lg-9">
               <nav className="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
                 <a href="" className="text-decoration-none d-block d-lg-none">

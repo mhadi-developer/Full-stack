@@ -172,7 +172,8 @@ const Details = () => {
         <div className="row px-xl-5">
           <div className="col">
             <div className="bg-light p-30">
-              <div className="nav nav-tabs mb-4">
+              {/* Tab Links */}
+              <div className="nav nav-tabs mb-4" role="tablist">
                 {[
                   { id: "tab-pane-1", label: "Description", active: true },
                   { id: "tab-pane-2", label: "Information", active: false },
@@ -183,18 +184,28 @@ const Details = () => {
                     className={`nav-item nav-link text-dark ${
                       tab.active ? "active" : ""
                     }`}
-                    data-toggle="tab"
+                    id={`${tab.id}-tab`}
+                    data-bs-toggle="tab"
                     href={`#${tab.id}`}
+                    role="tab"
+                    aria-controls={tab.id}
+                    aria-selected={tab.active ? "true" : "false"}
                   >
                     {tab.label}
                   </a>
                 ))}
               </div>
 
+              {/* Tab Content */}
               <div className="tab-content">
                 {/* Description Tab */}
-                <div className="tab-pane fade show active" id="tab-pane-1">
-                  <h4 className="mb-3">Product Description=</h4>
+                <div
+                  className="tab-pane fade show active"
+                  id="tab-pane-1"
+                  role="tabpanel"
+                  aria-labelledby="tab-pane-1-tab"
+                >
+                  <h4 className="mb-3">Product Description</h4>
                   <div
                     dangerouslySetInnerHTML={{
                       __html: product.longDescription,
@@ -203,20 +214,19 @@ const Details = () => {
                 </div>
 
                 {/* Information Tab */}
-                <div className="tab-pane fade" id="tab-pane-2">
+                <div
+                  className="tab-pane fade"
+                  id="tab-pane-2"
+                  role="tabpanel"
+                  aria-labelledby="tab-pane-2-tab"
+                >
                   <h4 className="mb-3">Additional Information</h4>
                   <p>
                     Eos no lorem eirmod diam diam, eos elitr et gubergren diam
                     sea. Consetetur vero aliquyam invidunt duo dolores et duo
                     sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod
                     consetetur invidunt sed sed et, lorem duo et eos elitr,
-                    sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed
-                    temp or kasd eirmod. Takimata kasd ipsum accusam sadipscing,
-                    eos dolores sit no ut diam consetetur duo justo est, sit
-                    sanctus diam tempor aliquyam eirmod nonumy rebum dolor
-                    accusam, ipsum kasd eos consetetur at sit rebum, diam kasd
-                    invidunt tempor lorem, ipsum lorem elitr sanctus eirmod
-                    takimata dolor ea invidunt.
+                    sadipscing kasd ipsum rebum diam.
                   </p>
                   <div className="row">
                     {[0, 1].map((col) => (
@@ -239,7 +249,12 @@ const Details = () => {
                 </div>
 
                 {/* Reviews Tab */}
-                <div className="tab-pane fade" id="tab-pane-3">
+                <div
+                  className="tab-pane fade"
+                  id="tab-pane-3"
+                  role="tabpanel"
+                  aria-labelledby="tab-pane-3-tab"
+                >
                   <div className="row">
                     <div className="col-md-6">
                       <h4 className="mb-4">1 review for "Product Name"</h4>
