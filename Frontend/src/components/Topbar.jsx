@@ -37,10 +37,10 @@ const Topbar = () => {
 
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
-                    <button className="dropdown-item">Sign in</button>
+                    <Link to={"/signin"} className="dropdown-item">Sign in</Link>
                   </li>
                   <li>
-                    <Link to="/signup" className="dropdown-item">
+                    <Link to={"/signup"} className="dropdown-item">
                       Sign up
                     </Link>
                   </li>

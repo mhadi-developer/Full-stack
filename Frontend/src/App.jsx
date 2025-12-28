@@ -13,7 +13,8 @@ import Contact from './pages/Contact';
 import Topbar from './components/Topbar';
 import Footer from './components/Footer';
 import {useFetch} from '../src/customHooks/useFetch'
-import SignupForm from './pages/SignupForm';
+import SignupForm from './pages/SignupForm.jsx';
+import SignInForm from './pages/SigninForm.jsx';
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -54,10 +55,10 @@ function App() {
           <Route path="/" element={<Home categories={categories} />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/products/:slug" element={<Details />} />
           <Route path="/signup" element={<SignupForm />} />
+          <Route path="/signin" element={<SignInForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

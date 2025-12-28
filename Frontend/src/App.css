@@ -50,3 +50,14 @@ color: #ffd333 !important;
     background-color:#3D464D !important;
     color:#FFD333 !important;
 }
+
+h4.signin-text{
+    padding: 20px 40px;
+        background-color: #3D464D !important;
+        color: #FFD333 !important;
+}
+a.dropdown-item:hover{
+background-color: #3d464d !important;
+color:#FFD333 !important;
+transition: .5s ease;
+}
