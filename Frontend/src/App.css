@@ -23,7 +23,8 @@
     z-index: -1;
 }
 .btn-primary:hover{
-    background-color:white;
+    background-color:#3D464D !important;
+    text-shadow: 10px 10px 10px 60px;
     color:#FFD333 !important;
 }
 
@@ -41,6 +42,11 @@ div a.text-dark:hover{
 color: #ffd333 !important;
 }
 .nav-tabs .nav-link.active{
+    background-color:#3D464D !important;
+    color:#FFD333 !important;
+}
+.signup-text{
+    padding: 20px 40px;
     background-color:#3D464D !important;
     color:#FFD333 !important;
 }

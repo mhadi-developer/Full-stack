@@ -3,33 +3,18 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { CartContext } from "../App.jsx";
 import { useContext } from "react";
-import { useFetch } from "../customHooks/useFetch.js";
 
 
 
 
 
 
-export default function Nav() {
-
-
-
-const {
-  data: categories,
-  error,
-  loading,
-} = useFetch("http://localhost:7000/categories"); 
-
-
-
-const {cart, setCart}=useContext(CartContext);
-
+export default function Nav({ categories }) {
   
-  let [showmenue,setShowMeanue]= useState(false)
-  function handelToggle(){
+  let [showmenue, setShowMeanue] = useState(false);
+  function handelToggle() {
     setShowMeanue(!showmenue);
   }
-
 
   return (
     <>
@@ -57,9 +42,9 @@ const {cart, setCart}=useContext(CartContext);
                 style={{ width: "calc(100% - 30px)", zIndex: 999 }}
               >
                 <div className="navbar-nav dropdown w-100">
-                  {categories?.map((cat) => (
-                    <a key={cat._id} href="#" className="nav-item nav-link">
-                      {cat.title}
+                  {categories?.map((category, index) => (
+                    <a href="" className="nav-item nav-link">
+                      {category.title}
                     </a>
                   ))}
                 </div>

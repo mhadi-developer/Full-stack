@@ -1,19 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { useFetch } from "../customHooks/useFetch.js";
-
-export default function Categories() {
-
-  const url = "http://localhost:7000/categories";
-   const {
-     data: categories,
-     error,
-     loading,
-   } = useFetch(url); // custom hook.
-   
-  console.log("***********data from custom hook", categories);
-  
-
+export default function Categories({categories}) {
   return (
     <div className="container-fluid pt-5">
       <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4">

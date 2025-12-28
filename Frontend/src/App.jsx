@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import './App.css';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -11,39 +12,52 @@ import { createContext, useState, useEffect } from 'react';
 import Contact from './pages/Contact';
 import Topbar from './components/Topbar';
 import Footer from './components/Footer';
+import {useFetch} from '../src/customHooks/useFetch'
+import SignupForm from './pages/SignupForm';
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext();
 
 function App() {
+  // fetching data from custom hook
+
+  
+
+  const {
+    data: categories,
+    error,
+    loading,
+  } = useFetch("http://localhost:7000/categories"); // custom hook.
+
   // Load cart directly from localStorage as initial state
   const [cart, setCart] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('cart')) || [];
+      return JSON.parse(localStorage.getItem("cart")) || [];
     } catch (error) {
-      console.error('Failed to parse cart from localStorage', error);
+      console.error("Failed to parse cart from localStorage", error);
       return [];
     }
   });
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
   return (
     <CartContext.Provider value={{ cart, setCart }}>
       <BrowserRouter>
         <Topbar />
-        <Nav />
+        <Nav categories={categories} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home categories={categories} />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/products/:slug" element={<Details />} />
+          <Route path="/signup" element={<SignupForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

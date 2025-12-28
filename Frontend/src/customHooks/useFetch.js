@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState , useEffect } from "react";
 
+// url for custom path for fetching generic data 
 
 export const useFetch = (url) => {
     const [data, setData] = useState(null);
@@ -12,7 +13,6 @@ export const useFetch = (url) => {
         const getData = async () => {
             setLoading(true);
             try {
-                ;
                 const response = await fetch(url);
                 const data = await response.json();
                 console.log(data);

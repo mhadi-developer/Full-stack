@@ -155,19 +155,9 @@ function ProductCard({ mainImage, title, price, discountPrice, stars,slug }) {
 }
 
 // Main section
-export default function FeatureProducts() {
-  const [products, setProducts] = useState([]);
+export default function FeatureProducts({products}) {
 
-  useEffect(() => {
-    const getAllProducts = async () => {
-      const response = await fetch('http://localhost:7000/products');
-      const data = await response.json();
-      console.log("************Frontend console", data);
-      
-      setProducts(data);
-    }
-    getAllProducts();
-  },[])
+
   return (
     <section className="container-fluid pt-5 pb-3">
       <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4">
@@ -175,8 +165,8 @@ export default function FeatureProducts() {
       </h2>
 
       <div className="row px-xl-5">
-        {products.map((product) => (
-          <ProductCard key={product.id} {...product} />
+        {products?.map((product) => (
+          <ProductCard key={product._id} {...product} />
         ))}
       </div>
     </section>
