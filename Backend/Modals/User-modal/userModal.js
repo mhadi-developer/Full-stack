@@ -24,7 +24,7 @@ const userSchema = new Schema(
     fullName: { type: String, required: true, trim: true, minlength: 3 },
     username: { type: String, trim: true, unique: true, sparse: true },
     email: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true, minlength: 6 },
+    password: { type: String, required: true, minlength: 6 ,},
     role: {
       type: String,
       enum: ["customer", "admin", "moderator"],

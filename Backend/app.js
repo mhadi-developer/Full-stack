@@ -21,7 +21,12 @@ const startServer = async () => {
     console.log("MongoDB connected");
 
     // Mount routes **after DB is connected**
-    app.use(cors());
+    app.use(
+      cors({
+        origin: " http://localhost:5173", // allowed frontend to entertain only request/ request frontend
+        credentials: true  // allow cookies
+      })
+    );
     app.use(productRoutes);
     app.use(categoryRoutes);
     app.use(userRoutes);

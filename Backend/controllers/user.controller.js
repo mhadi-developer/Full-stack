@@ -1,5 +1,6 @@
 import UserModal from "../Modals/User-modal/userModal.js"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
 
  export const signUpUser = async (req, res) => {
@@ -8,7 +9,7 @@ import bcrypt from "bcrypt"
 
      console.log("************************user data", data);
      const password = data.password; // password without hashed
-     const saltRounds = 12; // shuffling of password / roind of suffleing more time more secure
+     const saltRounds = 10; // shuffling of password / roind of suffleing more time more secure
      
      const hashedPassword = await bcrypt.hash(password, saltRounds); // hashing......
  
@@ -24,41 +25,51 @@ import bcrypt from "bcrypt"
      
 }
 
+
+
 export const SignInUser = async (req, res) => {
     try {
-        const data = req.body;
+      const data = req.body;
       const { email, password } = req.body;
-        console.log(data);
-        const registerUser = await UserModal.findOne({ email: email }); // checking the email existing in DB vs email entered by user
-        
-        if (!registerUser || registerUser.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message:"user not found"
-          })
-        }
-        
-        const isMatched = await bcrypt.compare(password, registerUser?.password);
-        //checking existing password (registeredUser) in Db vs pass entered by user while logged
+      console.log(data);
+      const registerUser = await UserModal.findOne({ email: email }); // checking the email existing in DB vs email entered by user
+
+      if (!registerUser || registerUser.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "user not found",
+        });
+      }
+      const isMatched = await bcrypt.compare(password, registerUser?.password);
+      //checking existing password (registeredUser) in Db vs pass entered by user while logged
+
+      if (!isMatched) {
+        return res.status(401).json({
+          success: false,
+          message: "password incorrect",
+        });
+      }
+
+      console.log("**********registered user", registerUser);
+
+      // sign a jwt
+      const jwToken = jwt.sign({ registerUser }, process.env.JWT_SECRET, {
+        expiresIn: 60 * 60,
+      });
+
+      res.cookie("jwt-Token", jwToken, {
+        httpOnly: true,
+        maxAge: 3600 * 1000,
+        secure: false,
+        sameSite: "lax"
+      })
 
 
-        if (!isMatched) {
-            return res.status(401).json({
-                success: false,
-                message: "password incorrect"
-            })
-        }
-
-
-        console.log("**********registered user", registerUser);
-      
-      
-    
-    res.status(202).json({
-      success: true,
-      message: "User registered successfully",
-    });
-  } catch (error) {
+      res.status(202).json({
+        success: true,
+        message: "User registered successfully",
+      });
+    } catch (error) {
       res.status(500).json({ message: "Server error" });
       console.log(error);
       
