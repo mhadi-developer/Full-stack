@@ -23,6 +23,14 @@ export const CartContext = createContext();
 function App() {
   // fetching data from custom hook
 
+    const {
+      data: loggedInUserData,
+      error: loggedInUserError,
+      loading: loggedInUserLoading
+  } = useFetch("http://localhost:7000/users/loggedIn-user");
+  // fetching the information of looged in user from backend whenever the app.jsx renders.
+
+  console.log('*****logged in ',loggedInUserData);
   
 
   const {
@@ -46,10 +54,14 @@ function App() {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+
+ 
+  
+
   return (
     <CartContext.Provider value={{ cart, setCart }}>
       <BrowserRouter>
-        <Topbar />
+        <Topbar loggedInUserInfo={ loggedInUserData } />
         <Nav categories={categories} />
         <Routes>
           <Route path="/" element={<Home categories={categories} />} />

@@ -13,7 +13,10 @@ export const useFetch = (url) => {
         const getData = async () => {
             setLoading(true);
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                  method: "GET",
+                  credentials: "include",
+                });
                 const data = await response.json();
                 console.log(data);
                 setData(data);

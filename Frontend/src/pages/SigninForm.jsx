@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePost } from "../customHooks/usePost";
+import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 
 
@@ -11,6 +12,7 @@ const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
+
 
 export default function SignInForm() {
   const {
@@ -21,6 +23,7 @@ export default function SignInForm() {
     resolver: zodResolver(signInSchema),
   });
     
+  const navigate = useNavigate(); // initializing the redirect
     
     const { postData, data, error, loading } = usePost('http://localhost:7000/users/signin');
     
@@ -32,7 +35,9 @@ export default function SignInForm() {
 
   const onSubmit = async (data) => {
     console.log("Login Data:", data);
-      await postData(data);
+    await postData(data);
+    navigate('/'); // redirecting to homepage
+    
   };
 
   return (

@@ -1,50 +1,85 @@
-import React from 'react'
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router-dom";
 
-const Topbar = () => {
+const Topbar = ({ loggedInUserInfo }) => {
+  // Use the correct property from your backend response
+ 
+
+  console.log("Topbar user:", loggedInUserInfo);
+
   return (
     <div>
       <div className="container-fluid">
+        {/* Top row: About, Contact, Help, FAQs */}
         <div className="row bg-secondary py-1 px-xl-5">
           <div className="col-lg-6 d-none d-lg-block">
             <div className="d-inline-flex align-items-center h-100">
-              <a className="text-body mr-3" href="">
+              <a className="text-body mr-3" href="#">
                 About
               </a>
-              <a className="text-body mr-3" href="">
+              <a className="text-body mr-3" href="#">
                 Contact
               </a>
-              <a className="text-body mr-3" href="">
+              <a className="text-body mr-3" href="#">
                 Help
               </a>
-              <a className="text-body mr-3" href="">
+              <a className="text-body mr-3" href="#">
                 FAQs
               </a>
             </div>
           </div>
+
           <div className="col-lg-6 text-center text-lg-end">
             <div className="d-inline-flex ms-auto">
               {/* Account Dropdown */}
               <div className="btn-group">
-                <button
-                  type="button"
-                  className="btn btn-sm btn-light dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  My Account
-                </button>
-
-                <ul className="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <Link to={"/signin"} className="dropdown-item">Sign in</Link>
-                  </li>
-                  <li>
-                    <Link to={"/signup"} className="dropdown-item">
-                      Sign up
-                    </Link>
-                  </li>
-                </ul>
+                {loggedInUserInfo && loggedInUserInfo?.fullName ? (
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-light dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {loggedInUserInfo.fullName}
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <Link to="/profile" className="dropdown-item">
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/logout" className="dropdown-item">
+                          Logout
+                        </Link>
+                      </li>
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-light dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      My Account
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <Link to="/signin" className="dropdown-item">
+                          Sign in
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/signup" className="dropdown-item">
+                          Sign up
+                        </Link>
+                      </li>
+                    </ul>
+                  </>
+                )}
               </div>
 
               {/* Currency Dropdown */}
@@ -57,7 +92,6 @@ const Topbar = () => {
                 >
                   USD
                 </button>
-
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
                     <button className="dropdown-item">EUR</button>
@@ -81,7 +115,6 @@ const Topbar = () => {
                 >
                   EN
                 </button>
-
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
                     <button className="dropdown-item">FR</button>
@@ -114,9 +147,11 @@ const Topbar = () => {
             </div>
           </div>
         </div>
+
+        {/* Bottom row: Logo, Search, Customer Service */}
         <div className="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
           <div className="col-lg-4">
-            <a href="" className="text-decoration-none">
+            <a href="#" className="text-decoration-none">
               <span className="h1 text-uppercase text-primary bg-dark px-2">
                 Multi
               </span>
@@ -125,8 +160,9 @@ const Topbar = () => {
               </span>
             </a>
           </div>
+
           <div className="col-lg-4 col-6 text-left">
-            <form action="">
+            <form>
               <div className="input-group">
                 <input
                   type="text"
@@ -141,6 +177,7 @@ const Topbar = () => {
               </div>
             </form>
           </div>
+
           <div className="col-lg-4 col-6 text-right">
             <p className="m-0">Customer Service</p>
             <h5 className="m-0">+012 345 6789</h5>
@@ -149,6 +186,6 @@ const Topbar = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Topbar;

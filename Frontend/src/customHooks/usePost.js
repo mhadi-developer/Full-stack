@@ -13,7 +13,7 @@ export function usePost(url) {
     try {
       const response = await fetch(url, {
         method: "POST",
-        credentials: "include",
+        credentials:'include',
         headers: {
           "Content-Type": "application/json",
           ...options.headers,

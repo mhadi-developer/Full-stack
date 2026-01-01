@@ -53,16 +53,23 @@ export const SignInUser = async (req, res) => {
       console.log("**********registered user", registerUser);
 
       // sign a jwt
-      const jwToken = jwt.sign({ registerUser }, process.env.JWT_SECRET, {
-        expiresIn: 60 * 60,
-      });
+      const token = jwt.sign({ 
+        id: registerUser._id,
+        email: registerUser.email,
+        name: registerUser.fullName,
+        role: registerUser.role
+       }, process.env.JWT_SECRET, { expiresIn: '1hr' });
+      
+      // signing a server side cookie 
 
-      res.cookie("jwt-Token", jwToken, {
+      res.cookie("jwt-Token", token, {
         httpOnly: true,
-        maxAge: 3600 * 1000,
+        maxAge: 3600 * 1000, // 1hr (milliseconds)
         secure: false,
         sameSite: "lax"
-      })
+      });
+
+
 
 
       res.status(202).json({
@@ -75,3 +82,11 @@ export const SignInUser = async (req, res) => {
       
   }
 };
+
+
+
+export const getLoggedInUser = async (req, res) => {
+ const loggedInUser =  await UserModal.findById(req.user.id).select('-password'); // using req.user from auth middleware
+  res.status(200).json(loggedInUser);
+
+}
