@@ -1,11 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../Custom-context/AuthProvider";
 
-const Topbar = ({ loggedInUserInfo }) => {
-  // Use the correct property from your backend response
+
+const Topbar = () => {
+ 
+  const { loggedInUserData, loggedInUserError, loggedInUserLoading } = useAuth();
+  console.log('********topbar user',loggedInUserData);
+  
  
 
-  console.log("Topbar user:", loggedInUserInfo);
 
   return (
     <div>
@@ -33,7 +37,7 @@ const Topbar = ({ loggedInUserInfo }) => {
             <div className="d-inline-flex ms-auto">
               {/* Account Dropdown */}
               <div className="btn-group">
-                {loggedInUserInfo && loggedInUserInfo?.fullName ? (
+                {loggedInUserData && loggedInUserData?.fullName ? (
                   <>
                     <button
                       type="button"
@@ -41,7 +45,7 @@ const Topbar = ({ loggedInUserInfo }) => {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      {loggedInUserInfo.fullName}
+                     { loggedInUserLoading?"loading":loggedInUserData?.fullName }
                     </button>
                     <ul className="dropdown-menu dropdown-menu-end">
                       <li>

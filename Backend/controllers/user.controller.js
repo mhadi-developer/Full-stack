@@ -58,7 +58,7 @@ export const SignInUser = async (req, res) => {
         email: registerUser.email,
         name: registerUser.fullName,
         role: registerUser.role
-       }, process.env.JWT_SECRET, { expiresIn: '1hr' });
+       }, process.env.JWT_SECRET, { expiresIn: '1.5hr' });
       
       // signing a server side cookie 
 

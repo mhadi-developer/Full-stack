@@ -15,6 +15,7 @@ import Footer from './components/Footer';
 import {useFetch} from '../src/customHooks/useFetch'
 import SignupForm from './pages/SignupForm.jsx';
 import SignInForm from './pages/SigninForm.jsx';
+import AuthProvider from './Custom-context/AuthProvider.jsx';
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -23,14 +24,14 @@ export const CartContext = createContext();
 function App() {
   // fetching data from custom hook
 
-    const {
-      data: loggedInUserData,
-      error: loggedInUserError,
-      loading: loggedInUserLoading
-  } = useFetch("http://localhost:7000/users/loggedIn-user");
+  //   const {
+  //     data: loggedInUserData,
+  //     error: loggedInUserError,
+  //     loading: loggedInUserLoading
+  // } = useFetch("http://localhost:7000/users/loggedIn-user");
   // fetching the information of looged in user from backend whenever the app.jsx renders.
 
-  console.log('*****logged in ',loggedInUserData);
+  // console.log('*****logged in ',loggedInUserData);
   
 
   const {
@@ -59,24 +60,54 @@ function App() {
   
 
   return (
-    <CartContext.Provider value={{ cart, setCart }}>
-      <BrowserRouter>
-        <Topbar loggedInUserInfo={ loggedInUserData } />
-        <Nav categories={categories} />
-        <Routes>
-          <Route path="/" element={<Home categories={categories} />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/products/:slug" element={<Details />} />
-          <Route path="/signup" element={<SignupForm />} />
-          <Route path="/signin" element={<SignInForm />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-      <Footer />
-    </CartContext.Provider>
+    <AuthProvider> {/* children prop concept*/} 
+      <CartContext.Provider value={{ cart, setCart }}>
+        <BrowserRouter>
+          <Topbar />
+          <Nav categories={categories} />
+          <Routes>
+            <Route path="/" element={<Home categories={categories} />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/products/:slug" element={<Details />} />
+            <Route path="/signup" element={<SignupForm />} />
+            <Route path="/signin" element={<SignInForm />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+        <Footer />
+      </CartContext.Provider>
+    </AuthProvider> // children prop concept
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+// Child prop Concept 
+
+
+// function childprop({children}) {
+//   return (
+//     <p> {children}</p>
+//   )
+// }
+
+
+// <childprop>
+//   <ul>
+//     <li><a href=""></a><a href=""></a></li>
+//   </ul>
+//   <ul>
+//     <li><a href=""></a><a href=""></a></li>
+//   </ul>
+//   <ul>
+//     <li><a href=""></a><a href=""></a></li>
+//   </ul>
+// </childprop>
