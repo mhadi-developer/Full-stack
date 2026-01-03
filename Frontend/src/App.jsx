@@ -16,6 +16,8 @@ import {useFetch} from '../src/customHooks/useFetch'
 import SignupForm from './pages/SignupForm.jsx';
 import SignInForm from './pages/SigninForm.jsx';
 import AuthProvider from './Custom-context/AuthProvider.jsx';
+import UserProfile from './pages/UserProfile.jsx';
+import Protected from './pages/Protected.jsx';
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -60,7 +62,9 @@ function App() {
   
 
   return (
-    <AuthProvider> {/* children prop concept*/} 
+    <AuthProvider>
+      {" "}
+      {/* children prop concept*/}
       <CartContext.Provider value={{ cart, setCart }}>
         <BrowserRouter>
           <Topbar />
@@ -73,6 +77,16 @@ function App() {
             <Route path="/products/:slug" element={<Details />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/signin" element={<SignInForm />} />
+            <Route
+              path="/profile"
+              element={
+                <Protected>
+               
+                  <UserProfile />
+                </Protected>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
@@ -90,7 +104,7 @@ export default App;
 
 
 
-// Child prop Concept 
+// Child prop Concept  || children prop
 
 
 // function childprop({children}) {

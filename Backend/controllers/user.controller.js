@@ -34,7 +34,7 @@ export const SignInUser = async (req, res) => {
       console.log(data);
       const registerUser = await UserModal.findOne({ email: email }); // checking the email existing in DB vs email entered by user
 
-      if (!registerUser || registerUser.length === 0) {
+      if (!registerUser) {
         return res.status(404).json({
           success: false,
           message: "user not found",
@@ -72,7 +72,7 @@ export const SignInUser = async (req, res) => {
 
 
 
-      res.status(202).json({
+      res.status(200).json({
         success: true,
         message: "User registered successfully",
       });
@@ -83,10 +83,23 @@ export const SignInUser = async (req, res) => {
   }
 };
 
-
+// getting logged in user withput password field
 
 export const getLoggedInUser = async (req, res) => {
  const loggedInUser =  await UserModal.findById(req.user.id).select('-password'); // using req.user from auth middleware
   res.status(200).json(loggedInUser);
 
 }
+
+
+
+export const LogoutUser = (req, res, next) => {
+  res
+    .clearCookie('jwt-Token', " ",{
+      httpOnly: true,
+      secure: false,     // must match login
+      sameSite: 'lax',// must match login
+      maxAge:0
+    })
+    .sendStatus(204);
+};

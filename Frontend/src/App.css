@@ -1,6 +1,14 @@
+body.background-color{
+background-color: #e9d69f !important;
+}
+
+
+
 .feature-card{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
+    background-color: #3D464D !important;
+    color: #FFD333 !important;
 }
 .feature-card:hover{
     background-color: #FFD333 !important;
@@ -10,6 +18,10 @@
 .feature-card:hover i {
     color: white !important;
 }
+.feature-card h5  {
+ color: #FFD333 !important;
+}
+
 .feature-card:hover h5 {
     color: white !important;
 }
@@ -19,8 +31,13 @@
     width: 50%;
     height: 4px;
     bottom: 0;
-    background-color:#FFD333;
+    background-color: #3D464D;
     z-index: -1;
+}
+.bg-secondary{
+ background-color: #3D464D !important;
+ color: #FFD333 !important;
+ padding: 10px 20px;
 }
 .btn-primary:hover{
     background-color:#3D464D !important;
@@ -61,10 +78,31 @@ background-color: #3d464d !important;
 color:#FFD333 !important;
 transition: .5s ease;
 }
+.logout-tab:hover{
+    background-color: #3d464d !important;
+        color: #FFD333 !important;
+        transition: .5s ease;
+}
 
 .btn-carousel:hover{ 
  background-color: #FFD333 !important;
  color: #3D464D !important;
  transition: .5s ease;
  border: 2px solid #3D464D !important;
+}
+
+.nav-pills .nav-link.text-start{
+    color:#FFD333 !important;
+    margin-block: 6px;
+}
+.nav-pills .nav-link.text-start.active {
+    color: #3d464d !important;
+    margin-block: 6px;
+}
+.card-body{
+    background-color: #3D464D  !important;
+    color: #FFD333 !important;
+}
+.card-body .fw-semibold{
+    color: #FFD333 !important;
 }

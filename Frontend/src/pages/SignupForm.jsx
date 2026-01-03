@@ -6,6 +6,8 @@ import PhoneInput from "react-phone-input-2";
 import * as z from "zod";
 import "react-phone-input-2/lib/bootstrap.css";
 import { usePost } from "../customHooks/usePost";
+import { useAuth } from "../Custom-context/AuthProvider";
+import { Navigate } from "react-router";
 
 const schema = z
   .object({
@@ -21,6 +23,16 @@ const schema = z
   });
 
 export default function SignupForm() {
+
+  const { loggedInUserData, loggedInUserError, loggedInUserLoading } = useAuth();
+  // checking user already logged in or not
+  
+
+  if (loggedInUserLoading) return <strong>loading... please wait...</strong>;
+  if (loggedInUserData && loggedInUserData?.fullName) return <Navigate to={'/'} />;  //Redirecting loogedin User to home page 
+
+
+
 
    const {postData , data , error , loading}= usePost('http://localhost:7000/users/signup');
   const {

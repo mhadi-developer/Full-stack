@@ -5,17 +5,16 @@ import { useAuth } from "../Custom-context/AuthProvider";
 
 const Topbar = () => {
  
-  const { loggedInUserData, loggedInUserError, loggedInUserLoading } = useAuth();
-  console.log('********topbar user',loggedInUserData);
+  const { loggedInUserData, loggedInUserError, loggedInUserLoading , LogoutUser } = useAuth();
+  console.log('********topbar user', loggedInUserData);
   
- 
-
+  //LogoutUser  == function
 
   return (
     <div>
       <div className="container-fluid">
         {/* Top row: About, Contact, Help, FAQs */}
-        <div className="row bg-secondary py-1 px-xl-5">
+        <div className="row  py-1 px-xl-5">
           <div className="col-lg-6 d-none d-lg-block">
             <div className="d-inline-flex align-items-center h-100">
               <a className="text-body mr-3" href="#">
@@ -45,7 +44,9 @@ const Topbar = () => {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                     { loggedInUserLoading?"loading":loggedInUserData?.fullName }
+                      {loggedInUserLoading
+                        ? "loading"
+                        : loggedInUserData?.fullName}
                     </button>
                     <ul className="dropdown-menu dropdown-menu-end">
                       <li>
@@ -54,9 +55,12 @@ const Topbar = () => {
                         </Link>
                       </li>
                       <li>
-                        <Link to="/logout" className="dropdown-item">
+                        <button
+                          onClick={LogoutUser}
+                          className="dropdown-item logout-tab"
+                        >
                           Logout
-                        </Link>
+                        </button>
                       </li>
                     </ul>
                   </>

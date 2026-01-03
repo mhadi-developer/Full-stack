@@ -1,67 +1,49 @@
-import React, { createContext } from 'react'
-import { useFetch } from '../customHooks/useFetch';
-import { useContext } from 'react';
-
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useFetch } from "../customHooks/useFetch";
 
 export const AuthContext = createContext();
 
+const AuthProvider = ({ children }) => {
+  const { data, error, loading } = useFetch(
+    "http://localhost:7000/users/loggedIn-user"
+  );
 
-const AuthProvider = ({children}) => {
+  const [loggedInUserData, setLoggedInUserData] = useState(null);
 
-      const {
-          data: loggedInUserData,
-          error: loggedInUserError,
-          loading: loggedInUserLoading
-      } = useFetch("http://localhost:7000/users/loggedIn-user");
-    // fetching the information of looged in user from backend whenever the app.jsx renders.
-    
-    return (
-      <div>
-        <AuthContext.Provider
-          value={{ loggedInUserData, loggedInUserError , loggedInUserLoading}} >
-                {children}   {/* children = App.jsx (children prop)*/}
-        </AuthContext.Provider>
-      </div>
-    );
-}
+  useEffect(() => {
+    setLoggedInUserData(data);
+  }, [data]);   // save the current and updated state of user 
+
+  const LogoutUser = async () => {
+    try {
+      const res = await fetch("http://localhost:7000/users/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("Logout failed");
+
+      // Clear auth state
+      setLoggedInUserData(null);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        loggedInUserData,
+        loggedInUserError: error,
+        loggedInUserLoading: loading,
+        LogoutUser,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
 export default AuthProvider;
 
-
-
-
-// custom hook for AuthContex
-
 export const useAuth = () => useContext(AuthContext);
-
-
-
-
-
-
-
-
-
-// 
-
-// Child prop Concept 
-
-
-// function childprop({children}) {
-//   return (
-//     <p> {children}</p>
-//   )
-// }
-
-
-// <childprop>
-//   <ul>
-//     <li><a href=""></a><a href=""></a></li>
-//   </ul>
-//   <ul>
-//     <li><a href=""></a><a href=""></a></li>
-//   </ul>
-//   <ul>
-//     <li><a href=""></a><a href=""></a></li>
-//   </ul>
-// </childprop>

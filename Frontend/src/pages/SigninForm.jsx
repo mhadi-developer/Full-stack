@@ -3,8 +3,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePost } from "../customHooks/usePost";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../Custom-context/AuthProvider";
 import * as z from "zod";
+
 
 
 // Validation Schema
@@ -15,6 +17,22 @@ const signInSchema = z.object({
 
 
 export default function SignInForm() {
+  const { loggedInUserData, loggedInUserError, loggedInUserLoading } = useAuth();
+
+  if (loggedInUserLoading) return <p>loading.....</p>
+  if(loggedInUserData && loggedInUserData?.fullName) return <Navigate to={'/'} />  // checking is user already logged in or not.
+
+
+
+
+
+
+
+
+
+
+
+
   const {
     register,
     handleSubmit,
@@ -36,7 +54,7 @@ export default function SignInForm() {
   const onSubmit = async (data) => {
     console.log("Login Data:", data);
     await postData(data);
-    navigate('/'); // redirecting to homepage
+    window.location.href = '/'; // redirecting to homepage
     
   };
 
