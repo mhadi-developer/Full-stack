@@ -204,7 +204,10 @@ export default function AddProductForm() {
 
   useEffect(() => {
     const getAllCategories = async () => {
-      const response = await fetch('http://localhost:7000/categories') 
+      const response = await fetch("http://localhost:7000/categories", {
+        method: 'GET',
+        credentials: 'include'
+      }); 
       const data = await response.json();
       console.log(data);
       setCategories(data);
@@ -227,7 +230,6 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.title.message}</small>
           )}
         </div>
-
         {/* Slug */}
         <div className="mb-3">
           <label className="form-label">Slug</label>
@@ -236,7 +238,6 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.slug.message}</small>
           )}
         </div>
-
         {/* SKU */}
         <div className="mb-3">
           <label className="form-label">SKU</label>
@@ -245,7 +246,6 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.sku.message}</small>
           )}
         </div>
-
         {/* Short Description */}
         <div className="mb-3">
           <label className="form-label">Short Description</label>
@@ -259,7 +259,6 @@ export default function AddProductForm() {
             </small>
           )}
         </div>
-
         {/* Long Description */}
         <div className="mb-3">
           <label className="form-label">Long Description</label>
@@ -276,7 +275,6 @@ export default function AddProductForm() {
             </small>
           )}
         </div>
-
         {/* Price & Discount */}
         <div className="row mt-3">
           <div className="col-md-4 mb-3">
@@ -311,7 +309,6 @@ export default function AddProductForm() {
             />
           </div>
         </div>
-
         {/* Category */}
         <div className="mb-3">
           <label className="form-label">Category</label>
@@ -330,7 +327,6 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.category.message}</small>
           )}
         </div>
-
         {/* Stock */}
         <div className="mb-3">
           <label className="form-label">Stock</label>
@@ -343,7 +339,6 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.stock.message}</small>
           )}
         </div>
-
         {/* Sizes */}
         <div className="mb-3">
           <label className="form-label">Sizes</label>
@@ -359,7 +354,6 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.sizes.message}</small>
           )}
         </div>
-
         {/* Colors */}
         <div className="mb-3">
           <label className="form-label">Colors</label>
@@ -375,7 +369,6 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.colors.message}</small>
           )}
         </div>
-
         {/* Video Link */}
         <div className="mb-3">
           <label className="form-label">Video Link (Optional)</label>
@@ -388,15 +381,16 @@ export default function AddProductForm() {
             <small className="text-danger">{errors.videoLink.message}</small>
           )}
         </div>
-
-        {/* Main Image */}
+       { /* ----------------- Main Image -----------------*/}
         <div className="mb-3">
           <label className="form-label">Main Image</label>
           <input
-            name="mainImage"
             type="file"
             className="form-control"
-            onChange={handleMainImage}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) setMainImage({ file, url: URL.createObjectURL(file) });
+            }}
             ref={mainImageRef}
           />
           {mainImage && (
@@ -410,14 +404,17 @@ export default function AddProductForm() {
                 type="button"
                 className="btn btn-danger btn-sm position-absolute"
                 style={{ top: 5, right: 5 }}
-                onClick={removeMainImage}
+                onClick={() => {
+                  if (mainImage?.url) URL.revokeObjectURL(mainImage.url);
+                  setMainImage(null);
+                  if (mainImageRef.current) mainImageRef.current.value = "";
+                }}
               >
                 Remove
               </button>
             </div>
           )}
         </div>
-
         {/* Gallery Images */}
         <div className="mb-3">
           <label className="form-label">Gallery Images</label>
@@ -439,7 +436,11 @@ export default function AddProductForm() {
           </div>
           <div className="d-flex flex-wrap gap-3 mt-3">
             {galleryImages.map((img) => (
-              <div key={img.id} className="position-relative">
+              <div
+                key={img.id}
+                className="position-relative"
+                style={{ width: 140 }}
+              >
                 <img
                   src={img.url}
                   alt="gallery"
@@ -448,9 +449,14 @@ export default function AddProductForm() {
                 />
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm position-absolute"
+                  className="btn btn-danger btn-sm position-absolute"
                   style={{ top: 5, right: 5 }}
-                  onClick={() => removeGalleryImage(img.id)}
+                  onClick={() => {
+                    if (img?.url) URL.revokeObjectURL(img.url);
+                    setGalleryImages((prev) =>
+                      prev.filter((i) => i.id !== img.id)
+                    );
+                  }}
                 >
                   X
                 </button>
@@ -458,23 +464,26 @@ export default function AddProductForm() {
             ))}
           </div>
         </div>
-
         {/* Submit */}
-        <button type="submit" className="btn btn-primary w-50 mt-4" disabled={submitloader}>
-         {submitloader? 'Submitng...':'Add product'}
+        <button
+          type="submit"
+          className="btn btn-primary w-50 mt-4"
+          disabled={submitloader}
+        >
+          {submitloader ? "Submitng..." : "Add product"}
         </button>
-         <ToastContainer
-                  position="top-center"
-                  autoClose={3000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="colored"
-             />
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </form>
     </div>
   );

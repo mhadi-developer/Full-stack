@@ -1,35 +1,29 @@
-import ProductModal from '../Modals/Product-modal/product-modal.js'
+import ProductModal from "../Modals/Product-modal/product-modal.js";
 
-export const getAllProducts = async (req,res)=>{
-  const products = await ProductModal.find({})
+export const getAllProducts = async (req, res) => {
+  const products = await ProductModal.find({});
   res.json(products);
-  } // fetch all products from database
+}; // fetch all products from database
 
-export const getProductsById = async (req,res)=>{
-  const {id} = req.params;
- const product = await ProductModal.findById(id);
-
-  res.json({
-    message: 'single product endpoint called',
-    product
-  })
-} // fetch single product by id from database
-
-
-export const getProductsBySlug = async (req,res)=>{
-  const {slug} = req.params;
- const product = await ProductModal.find({slug});
+export const getProductsById = async (req, res) => {
+  const { id } = req.params;
+  const product = await ProductModal.findById(id);
 
   res.json({
-    message: 'single product endpoint called',
-    product
-  })
-} // fetch single product by slug from database
+    message: "single product endpoint called",
+    product,
+  });
+}; // fetch single product by id from database
 
+export const getProductsBySlug = async (req, res) => {
+  const { slug } = req.params;
+  const product = await ProductModal.find({ slug });
 
-
-
-
+  res.json({
+    message: "single product endpoint called",
+    product,
+  });
+}; // fetch single product by slug from database
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
@@ -37,16 +31,15 @@ export const updateProduct = async (req, res) => {
   await ProductModal.findByIdAndUpdate(id, data);
   res.json({
     message: `product with id ${id} is updated`,
-  data:data})
-} // update product by id in database
-
+    data: data,
+  });
+}; // update product by id in database
 
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
-  await ProductModal.findByIdAndDelete(id)
-  res.json({message:`product with id ${id} is deleted`})
-} // delete product by id in database
-
+  await ProductModal.findByIdAndDelete(id);
+  res.json({ message: `product with id ${id} is deleted` });
+}; // delete product by id in database
 
 export const createProduct = async (req, res) => {
   const sendData = req.body;
@@ -84,10 +77,12 @@ export const createProduct = async (req, res) => {
   res.json({
     message: "create product is called",
   });
-}
+};
+// ✅ List of allowed origins
+export const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174/",
+];
 // } // create new product in database
-
-
-
 
 // Each function interacting with ProductModal Function to perform "CURD (Create , update , read , delete)" operations in database.

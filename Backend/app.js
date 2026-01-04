@@ -10,13 +10,17 @@ import { connectDB } from "./config/db.js";
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ✅ MIDDLEWARE FIRST
+// ✅ List of allowed origins
+
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    credentials: true,
+    origin: "http://localhost:5173", // your frontend
+    credentials: true, // needed because your fetch uses credentials
   })
 );
+
+
 
 app.use(express.json());
 app.use(cookieParser());

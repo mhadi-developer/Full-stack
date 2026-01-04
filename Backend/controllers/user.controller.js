@@ -9,9 +9,9 @@ import jwt from "jsonwebtoken"
 
      console.log("************************user data", data);
      const password = data.password; // password without hashed
-     const saltRounds = 10; // shuffling of password / roind of suffleing more time more secure
+ ; // shuffling of password / roind of suffleing more time more secure
      
-     const hashedPassword = await bcrypt.hash(password, saltRounds); // hashing......
+     const hashedPassword = await bcrypt.hash(password, 10); // hashing......
  
      data.password = hashedPassword;  // replace old password in object with hashed password
      
