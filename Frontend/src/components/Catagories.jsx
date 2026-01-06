@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 
-export default function Categories({categories}) {
+export default function Categories({ categories }) {
+  
+  console.log(" *******Recieved Categories from Backend ", categories);
+  
   return (
     <div className="container-fluid pt-5">
       <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4">
@@ -8,7 +11,7 @@ export default function Categories({categories}) {
       </h2>
 
       <div className="row px-xl-5 pb-3">
-        {categories?.map((categories, index) => (
+        {categories?.map((cat, index) => (
           <div className="col-lg-3 col-md-4 col-sm-6 pb-1" key={index}>
             <a className="text-decoration-none" href="#">
               <div className="cat-item img-zoom d-flex align-items-center mb-4">
@@ -18,8 +21,8 @@ export default function Categories({categories}) {
                 >
                   <img
                     className="img-fluid"
-                    src={categories?.image.secure_url}
-                    alt={categories.title}
+                    src={cat?.image?.secure_url}
+                    alt={cat?.title}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -29,8 +32,8 @@ export default function Categories({categories}) {
                 </div>
 
                 <div className="flex-fill pl-3">
-                  <h3>{categories.title}</h3>
-                  <small className="text-body">{categories.title}</small>
+                  <h3>{cat.title}</h3>
+                  <small className="text-body">{cat.title}</small>
                 </div>
               </div>
             </a>

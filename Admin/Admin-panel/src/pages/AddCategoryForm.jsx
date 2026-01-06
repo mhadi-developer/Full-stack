@@ -1,9 +1,8 @@
-// JSX version (.jsx)
-import React, { useRef,useState } from "react";
+import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-  import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 // ---------------- Zod Schema ----------------
 const categorySchema = z.object({
@@ -12,13 +11,11 @@ const categorySchema = z.object({
 });
 
 export default function AddCategoryForm() {
-  const fileInputRef = useRef();
-  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-    reset
   } = useForm({
     resolver: zodResolver(categorySchema),
     defaultValues: {
@@ -27,56 +24,64 @@ export default function AddCategoryForm() {
     },
   });
 
-  
-
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
+  // ---------------- Image Handlers ----------------
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setImage(file);
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImage(file);
   };
 
-  const removeImage = () => setImage(null);
+  const removeImage = () => {
+    setImage(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
+  // ---------------- Submit Handler ----------------
   const onSubmit = async (data) => {
+    if (!image) {
+      toast.error("Please select an image for the category.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("isPublic", data.isPublic);
-    if (image) {
-      formData.append("image", image);
-    }
+    formData.append("image", image);
 
-    console.log("Category Form Data:");
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+    // ---------------- Log submitted data ----------------
+    console.log("---- Submitting Category Data ----");
+    console.log("Title:", data.title);
+    console.log("isPublic:", data.isPublic);
+    console.log("Image:", image);
+    console.log("-------------------------------");
+
     try {
-      setLoading(true); //loader
-  const res = await fetch("http://localhost:7000/category/add", {
-    method: "POST",
-    body: formData,
-  });
+      setLoading(true);
+      const res = await fetch("http://localhost:7000/category/add", {
+        method: "POST",
+        body: formData, // do NOT set Content-Type
+      });
 
-  if (!res.ok) {
-    throw new Error(`Request failed with status ${res.status}`);
-  }
+      if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
 
-      const data = await res.json();
-       toast.success('category added succeesfully',res.message);
-      console.log("Success:", data);
-      setLoading(false); // loader
+      const responseData = await res.json();
+      toast.success("Category added successfully!");
+      console.log("Backend response:", responseData);
+
+      // Reset form
       reset();
-      fileInputRef.current.value = "";
-
-} catch (error) {
-      console.error("Request error:", error.message);
-      toast.error(`the image is not uploaded.`)
-}
-
-   
-    
-  }
-   
+      removeImage();
+    } catch (err) {
+      console.error("Request error:", err.message);
+      toast.error("Failed to upload category image.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container mt-4 mb-5 p-5">
@@ -106,14 +111,10 @@ export default function AddCategoryForm() {
           <label className="form-label">Category Image</label>
           <input
             type="file"
-            className="form-control"
             accept="image/*"
             onChange={handleImageChange}
-            ref={(e) => {
-              register("image").ref(e);
-              fileInputRef.current = e;
-            }}
-        
+            ref={fileInputRef}
+            className="form-control"
           />
 
           {image && (
@@ -154,14 +155,15 @@ export default function AddCategoryForm() {
           className="btn btn-primary w-100"
           disabled={loading}
         >
-          {loading ? "Saving" : "Add Category"}
+          {loading ? "Saving..." : "Add Category"}
         </button>
+
         <ToastContainer
           position="top-center"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
-          closeOnClick={false}
+          closeOnClick
           rtl={false}
           pauseOnFocusLoss
           draggable

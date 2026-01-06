@@ -13,9 +13,15 @@ const port = process.env.PORT || 5000;
 // ✅ List of allowed origins
 
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+,
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173", // your frontend
+    origin: allowedOrigins, // your frontend
     credentials: true, // needed because your fetch uses credentials
   })
 );

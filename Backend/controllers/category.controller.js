@@ -42,10 +42,16 @@ export const createCategory = async (req, res) => {
   
   const {title , isPublic} = req.body;
   const fileData = req.file;
+  console.log("*****body", req.body);
+  console.log("*****file data ", req.file);
+  
   const img = {
     public_id: fileData.filename,
     secure_url: fileData.path
   };
+
+  console.log("image data **********", img);
+  
 
   const data = {
     title,
@@ -59,7 +65,7 @@ export const createCategory = async (req, res) => {
   await CategoryModal.create(data);
 
   console.log(" Category added");
-  console.log(`Recieved data ${JSON.stringify(data)}`);
+  console.log(` Data stored in MongoDB ${JSON.stringify(data)}`);
  
    return res.status(200).json({
      success: true,

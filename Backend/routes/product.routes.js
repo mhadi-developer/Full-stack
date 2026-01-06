@@ -1,16 +1,16 @@
 import express from 'express'
 import { getAllProducts,getProductsBySlug,updateProduct,deleteProduct,createProduct } from '../controllers/product.controller.js';
-import upload from '../utilities/multerCloudinary.js';
+import { upload } from '../utilities/multer.js';
 import { isAuthenticated } from '../Middleware/auth.middleware.js';
 const app = express();
 const router = express.Router()
 
 
-router.route("/products/add").post(isAuthenticated,
-  upload.fields([
-    { name: "mainImage", maxCount: 1 },
-    { name: "galleryImages", maxCount: 5 },
-  ]),
+router.route("/products/add").post(
+  // upload.fields([
+  //   { name: "mainImage", maxCount: 1 },
+  //   { name: "galleryImages", maxCount: 5 },
+  // ]),
   createProduct
 );
 router.route("/products").get(getAllProducts);
