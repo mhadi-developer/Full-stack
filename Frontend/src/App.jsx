@@ -18,6 +18,7 @@ import SignInForm from './pages/SigninForm.jsx';
 import AuthProvider from './Custom-context/AuthProvider.jsx';
 import UserProfile from './pages/UserProfile.jsx';
 import Protected from './pages/Protected.jsx';
+import CartProvider from './Custom-context/CartProvider.jsx';
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -63,9 +64,8 @@ function App() {
 
   return (
     <AuthProvider>
-      {" "}
       {/* children prop concept*/}
-      <CartContext.Provider value={{ cart, setCart }}>
+      <CartProvider>
         <BrowserRouter>
           <Topbar />
           <Nav categories={categories} />
@@ -81,7 +81,6 @@ function App() {
               path="/profile"
               element={
                 <Protected>
-               
                   <UserProfile />
                 </Protected>
               }
@@ -91,7 +90,7 @@ function App() {
           </Routes>
         </BrowserRouter>
         <Footer />
-      </CartContext.Provider>
+      </CartProvider>
     </AuthProvider> // children prop concept
   );
 }

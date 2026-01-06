@@ -113,3 +113,16 @@ transition: .5s ease;
 .topbar-text{
     color: #FFD333 !important;
 }
+.cat-item:hover{
+    background-color: #3D464D !important;
+    color: #FFD333 !important;
+    transition: all .3s ease;
+
+}
+.cat-item:hover h3{
+    color: #FFD333!important;
+    transition: .2s ease;
+}
+.cat-item:hover .text-body{
+    color: #e9d69f !important;
+}
