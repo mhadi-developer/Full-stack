@@ -52,12 +52,42 @@ export const deleteProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   const productData = req.body;
-  const files = req.files;
-
-  console.log("backend recievd data ****************",productData);
 
 
-  res.status(201).json({message: "product created "})
+  
+    const sizes = req.body.sizes ? JSON.parse(req.body.sizes) : [];
+  const colors = req.body.colors ? JSON.parse(req.body.colors) : [];
+  
+  productData.sizes = sizes;
+  productData.colors = colors;
+  const images = req.files;
+  const mainImage = {
+    public_id: images.mainImage[0].filename,
+    secure_url : images.mainImage[0].path
+  }
+
+
+  const galleryImages = images.galleryImages.map((galleryImg) => {
+    return {
+      public_id: galleryImg.filename,
+      secure_url : galleryImg.path
+    }
+})
+// gallerImg object from the array of galleryImages array of objects 
+
+
+  console.log("backend recievd data ****************", productData);
+  console.log("********images", images);
+  
+  productData.mainImage = mainImage;
+  productData.galleryImages = galleryImages;
+
+
+  await ProductModal.create(productData);
+  
+
+
+  res.status(201).json({message: "product created ", data: productData})
   
 }
   

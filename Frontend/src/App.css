@@ -1,5 +1,9 @@
 body.background-color{
-background-color: #e9d69f !important;
+background: linear-gradient(90deg,
+            #e9d69f 10%,
+            #FFD333 40%,
+            #5a636a 90%);
+background-blend-mode: overlay;
 }
 
 
@@ -104,5 +108,8 @@ transition: .5s ease;
     color: #FFD333 !important;
 }
 .card-body .fw-semibold{
+    color: #FFD333 !important;
+}
+.topbar-text{
     color: #FFD333 !important;
 }

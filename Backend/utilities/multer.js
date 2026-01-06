@@ -6,7 +6,7 @@ const storage =  new CloudinaryStorage({
   cloudinary, // pass full cloudinary object
   params: async (req, file) => ({
     folder: "products",
-    public_id: file.originalname.split(".")[0],
+    public_id:  `${Date.now()}-${file.originalname.split(".")[0]}`,
     allowed_formats: ["jpg", "png", "jpeg", "webp"],
     resource_type: "image",
   }),

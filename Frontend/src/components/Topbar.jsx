@@ -157,7 +157,7 @@ const Topbar = () => {
         </div>
 
         {/* Bottom row: Logo, Search, Customer Service */}
-        <div className="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+        <div className="row align-items-center py-3 px-xl-5 d-none d-lg-flex">
           <div className="col-lg-4">
             <a href="#" className="text-decoration-none">
               <span className="h1 text-uppercase text-primary bg-dark px-2">
@@ -187,8 +187,8 @@ const Topbar = () => {
           </div>
 
           <div className="col-lg-4 col-6 text-right">
-            <p className="m-0">Customer Service</p>
-            <h5 className="m-0">+012 345 6789</h5>
+            <p className="m-0 topbar-text">Customer Service</p>
+            <h5 className="m-0 topbar-text">+012 345 6789</h5>
           </div>
         </div>
       </div>

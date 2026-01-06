@@ -90,10 +90,15 @@ export default function AddProductForm() {
         console.log(key, value);
       }
 
+      // console.log("****submitted data to backend", Object.fromEntries(formData).entries());
+
       const res = await fetch("http://localhost:7000/products/add", {
         method: "POST",
         body: formData,
       });
+
+      console.log('result', res);
+      
 
       if (!res.ok) throw new Error();
 
@@ -101,8 +106,10 @@ export default function AddProductForm() {
       reset();
       setMainImage(null);
       setGalleryImages([]);
-    } catch {
+    } catch (error) {
       toast.error("Submission failed");
+      console.log("error in form", error);
+      
     } finally {
       setSubmitLoading(false);
     }
@@ -110,11 +117,20 @@ export default function AddProductForm() {
 
   /* -------------------- FETCH CATEGORIES -------------------- */
   useEffect(() => {
-    fetch("http://localhost:7000/categories", { credentials: "include" })
-      .then((res) => res.json())
-      .then(setCategories)
-      .catch(() => toast.error("Failed to load categories"));
+    const fetchCategories = async () => {
+      const res = await fetch("http://localhost:7000/categories", {
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      setCategories(data);
+    };
+    fetchCategories();
+    
+    
   }, []);
+  console.log("****categories from Backend******", categories);
+  /*--------------------- Return Jsx --------------------*/
 
   return (
     <div className="container bg-secondary mt-4 mb-5 py-5 px-5 rounded">

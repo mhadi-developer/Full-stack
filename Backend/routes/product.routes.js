@@ -7,10 +7,10 @@ const router = express.Router()
 
 
 router.route("/products/add").post(
-  // upload.fields([
-  //   { name: "mainImage", maxCount: 1 },
-  //   { name: "galleryImages", maxCount: 5 },
-  // ]),
+  upload.fields([
+    { name: "mainImage", maxCount: 1 },
+    { name: "galleryImages", maxCount: 6 },
+  ]),
   createProduct
 );
 router.route("/products").get(getAllProducts);
