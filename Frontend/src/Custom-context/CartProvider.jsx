@@ -40,7 +40,7 @@ const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
 
     
-    const [  state , dispatch] = useReducer(cartReducer, cart);
+    const [  state , dispatch] = useReducer(cartReducer, cart); // useReducer hook for cart state managment (complex state managment)
 
 
     //defining actions for cart Reducer
