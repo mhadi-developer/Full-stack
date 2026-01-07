@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { useContext } from "react";
-
+import { useCart } from "../Custom-context/CartProvider";
 
 
 
@@ -14,6 +14,9 @@ export default function Nav({ categories }) {
   function handelToggle() {
     setShowMeanue(!showmenue);
   }
+  const { cartState } = useCart();
+  console.log("nav-bar cart", cartState);
+  
 
   return (
     <>
@@ -119,7 +122,7 @@ export default function Nav({ categories }) {
                         className="badge text-secondary border border-secondary rounded-circle"
                         style={{ paddingBottom: "2px" }}
                       >
-                        0
+                        {cartState.length}
                       </span>
                     </a>
                   </div>

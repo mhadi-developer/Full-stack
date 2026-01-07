@@ -6,32 +6,68 @@ const CartContext = createContext();
 
 
 
-const cartReducer = ( state , action ) => {
-    
-    if (action.type == 'ADD_TO_CART') {
-      console.log("add to cart action/ dispatcher called");
-      
-    }
-    else if (action.type == ' REMOVE_FROM_CART') {
-        console.log(" remove from the cart dispatcher called ");
-        
-        
-    }
-   else if (action.type == 'CLEAR_CART') {
-        
-    }
-   else if (action.type == 'INCREAMENT_CART') {
-        
-    }
-   else if (action.type == 'DECREMENT_CART') {
-        
+const cartReducer = (state, action) => {
+  switch (action.type) {
+      case "ADD_TO_CART": {
+          action.payload.quantity = 1;
+          const cartItem = action.payload;
+         
+      console.log("Previous State:", state);
+      console.log("Add to cart:", cartItem);
+
+          //   return [...state, cartItem];
+          if ((state.find((item) => item.id === cartItem.id))) {
+              cartItem.quantity = cartItem.quantity + 1;
+          }
+  
+          const newState = [...state, cartItem];
+          return newState;
     }
 
-    else {
-        throw new Error(' Invalid Action type');
+    case "REMOVE_FROM_CART": {
+      const id = action.payload;
+
+          const newState = state.filter((item) => item.id !== id);
+          return newState;
     }
 
-}
+    case "CLEAR_CART": {
+      return [];
+    }
+
+    case "INCREMENT_CART": {
+      const id = action.payload._id;
+
+      const newState = state.map((item) =>
+        item._id === id ? { ...item, quantity: item.quantity + 1 } : item
+          );
+
+          console.log("increaSed qynty............", newState);
+          
+          return newState;
+    }
+
+    case "DECREMENT_CART": {
+      const id = action.payload._id;
+
+      const newState = state.map((item) =>
+        item._id === id && item.quantity > -1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+          );
+          const filteredState = newState.filter(item => !(item.quantity == 0)); //removing the item with 0 qnty from cart list 
+
+           filteredState;
+          console.log("**********decrease qnty******", filteredState);
+          
+          return filteredState;
+    }
+
+      default:
+          return state;
+  }
+};
+ // reducer always have to return newstate based on action type.
 
 
 
@@ -40,24 +76,36 @@ const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
 
     
-    const [  state , dispatch] = useReducer(cartReducer, cart); // useReducer hook for cart state managment (complex state managment)
+    const [  cartState , dispatch] = useReducer(cartReducer, cart); // useReducer hook for cart state managment (complex state managment)
 
 
     //defining actions for cart Reducer
 
-    const AddToCart = () => dispatch({ type: 'ADD_TO_CART' });
+    const AddToCart = (product) => dispatch({ type: 'ADD_TO_CART' , payload: product});
     const RemoveFromCart = () => dispatch({ type: 'REMOVE_FROM_CART' });
     const ClearCart = () => dispatch({ type: 'CLEAR_CART' });
-    const IncreamentCart = () => dispatch({ type: 'INCREAMENT_CART' });
-    const DecrementCart = () => dispatch({ type: 'DECREMENT_CART' });
+    const IncreamentCart = (productId) =>
+      dispatch({ type: "INCREMENT_CART", payload: productId });
+    const DecrementCart = (productId) =>
+      dispatch({ type: "DECREMENT_CART", payload: productId });
 
 
 
   return (
-      <CartContext.Provider value={{ cart , setCart, AddToCart, RemoveFromCart , IncreamentCart, DecrementCart, ClearCart}}>
-          {children}       
-      </CartContext.Provider> // providing cart Context using provider component and concept of children prop.
-  )
+    <CartContext.Provider
+      value={{
+        cartState,
+        setCart,
+        AddToCart,
+        RemoveFromCart,
+        IncreamentCart,
+        DecrementCart,
+        ClearCart,
+      }}
+    >
+      {children}
+    </CartContext.Provider> // providing cart Context using provider component and concept of children prop.
+  );
 }
 
 export default CartProvider;

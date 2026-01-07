@@ -70,15 +70,20 @@
 
 import { useState } from "react";
 import { useEffect } from "react";
+import { useCart } from "../Custom-context/CartProvider";
 import { Link } from "react-router";
 
 // Reusable card component
-function ProductCard({ mainImage, title, price, discountPrice, stars,slug }) {
+function ProductCard({ mainImage, title, price, discountPrice, stars, slug }) {
+  const { AddToCart} = useCart();
   // Convert rating number into FontAwesome stars
  const StarRating = ({ value = 0, max = 5 }) => {
    const full = Math.floor(value);
    const half = value % 1 !== 0;
    const empty = max - full - (half ? 1 : 0);
+
+  
+   
 
    return (
      <div
@@ -106,20 +111,35 @@ function ProductCard({ mainImage, title, price, discountPrice, stars,slug }) {
  };
 
 
+  
+  
+   const productData = {
+     mainImage: mainImage,
+     title: title,
+     price: price,
+     discountPrice: discountPrice,
+     stars: stars,
+     slug: slug,
+  };
+  
+
   return (
     <div className="col-lg-3 col-md-4 col-sm-6 pb-1">
       <div className="product-item bg-light mb-4">
         <div className="product-img position-relative overflow-hidden">
           <img
             src={mainImage?.secure_url}
-            alt={name}
+            alt={mainImage?.public_id}
             className="img-fluid w-100"
           />
 
           <div className="product-action">
-            <a href="#" className="btn btn-outline-dark btn-square">
+            <button
+              className="btn btn-outline-dark btn-square"
+              onClick={() => AddToCart(productData)}
+            >
               <i className="fa fa-shopping-cart"></i>
-            </a>
+            </button>
             <a href="#" className="btn btn-outline-dark btn-square">
               <i className="far fa-heart"></i>
             </a>
@@ -143,10 +163,9 @@ function ProductCard({ mainImage, title, price, discountPrice, stars,slug }) {
               <del>PKR{price}.00</del>
             </h6>
           </div>
-           
+
           <div className="d-flex align-items-center justify-content-center mb-1">
-            <StarRating value={4.5}/>
-           
+            <StarRating value={4.5} />
           </div>
         </div>
       </div>

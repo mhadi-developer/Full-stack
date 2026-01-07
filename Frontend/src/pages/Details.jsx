@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import Breadcrumb from '../components/Detail-page-component/BreadCrum'
 import Carousel from 'react-bootstrap/Carousel';
+import { useCart } from '../Custom-context/CartProvider';
 
 
 
 const Details = () => {
   const { slug } = useParams() 
   const [product, setProduct] = useState({})
+  const { IncreamentCart , DecrementCart , AddToCart , cartState}=useCart();
   
 
   useEffect( () => {
@@ -130,7 +132,10 @@ const Details = () => {
                   style={{ width: "130px" }}
                 >
                   <div className="input-group-btn">
-                    <button className="btn btn-primary btn-minus">
+                    <button
+                      className="btn btn-primary btn-minus"
+                      onClick={() => DecrementCart(product)}
+                    >
                       <i className="fa fa-minus"></i>
                     </button>
                   </div>
@@ -141,12 +146,15 @@ const Details = () => {
                     readOnly
                   />
                   <div className="input-group-btn">
-                    <button className="btn btn-primary btn-plus">
+                    <button
+                      className="btn btn-primary btn-plus"
+                      onClick={()=>IncreamentCart(product)}
+                    >
                       <i className="fa fa-plus"></i>
                     </button>
                   </div>
                 </div>
-                <button className="btn btn-primary px-3">
+                <button  onClick={()=>AddToCart(product)} className="btn btn-primary px-3">
                   <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
                 </button>
               </div>
