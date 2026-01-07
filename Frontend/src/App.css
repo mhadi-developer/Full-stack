@@ -45,8 +45,9 @@ background-blend-mode: overlay;
 }
 .btn-primary:hover{
     background-color:#3D464D !important;
-    text-shadow: 10px 10px 10px 60px;
+    box-shadow: 10px 10px 20px rgba(0.1 , 0.2 , 0 , 0.3);
     color:#FFD333 !important;
+    transition: .5s ease;
 }
 
 .navbar-nav.dropdown .nav-link{
@@ -136,4 +137,9 @@ transition: .5s ease;
     opacity: 1 !important;
     margin-top: 0;
     transition: .3s .05s;
+}
+.form-custom{
+    color: #3D464D !important;
+    font-size: 20px !important;
+    background-color: #e9d69f !important;
 }

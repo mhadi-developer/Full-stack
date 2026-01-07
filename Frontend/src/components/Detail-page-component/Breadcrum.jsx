@@ -1,6 +1,6 @@
 import React from "react";
 
-const Breadcrumb = () => {
+const Breadcrumb = (  ) => {
   return (
     <div className="container-fluid">
       <div className="row px-xl-5">
@@ -12,7 +12,7 @@ const Breadcrumb = () => {
             <a className="breadcrumb-item text-dark" href="#">
               Shop
             </a>
-            <span className="breadcrumb-item active">Shop Detail</span>
+            <span className="breadcrumb-item active"> Cart</span>
           </nav>
         </div>
       </div>

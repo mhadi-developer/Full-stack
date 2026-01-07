@@ -15,19 +15,33 @@ const cartReducer = (state, action) => {
       console.log("Previous State:", state);
       console.log("Add to cart:", cartItem);
 
-          //   return [...state, cartItem];
-          if ((state.find((item) => item.id === cartItem.id))) {
-              cartItem.quantity = cartItem.quantity + 1;
-          }
+      //   return [...state, cartItem];
+      
+      // checking if same item is already  added to cart , if it exist increase its quantity only ;
+      const existingItem = state.find(item => item._id == cartItem._id);
+
+      if (existingItem) {
+       state.map((item) => {
+          return item._id == cartItem._id ?
+            { ...item, quantity: item.quantity + 1 } : item;
+        }
+        )
+      }
+      else {
+        const newState = [...state, { ...cartItem , quantity:1}];
+        return newState;
+      }
+      
+      
   
-          const newState = [...state, cartItem];
-          return newState;
+         
+          
     }
 
     case "REMOVE_FROM_CART": {
-      const id = action.payload;
+      const _id = action.payload;
 
-          const newState = state.filter((item) => item.id !== id);
+          const newState = state.filter((item) => item._id !== _id);
           return newState;
     }
 
@@ -82,7 +96,7 @@ const CartProvider = ({ children }) => {
     //defining actions for cart Reducer
 
     const AddToCart = (product) => dispatch({ type: 'ADD_TO_CART' , payload: product});
-    const RemoveFromCart = () => dispatch({ type: 'REMOVE_FROM_CART' });
+    const RemoveFromCart = (_id) => dispatch({ type: 'REMOVE_FROM_CART', payload: _id });
     const ClearCart = () => dispatch({ type: 'CLEAR_CART' });
     const IncreamentCart = (productId) =>
       dispatch({ type: "INCREMENT_CART", payload: productId });

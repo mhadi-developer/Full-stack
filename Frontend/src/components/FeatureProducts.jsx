@@ -72,17 +72,18 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useCart } from "../Custom-context/CartProvider";
 import { Link } from "react-router";
-
+import { useAuth } from "../Custom-context/AuthProvider";
+import { useNavigate } from "react-router";
 // Reusable card component
-function ProductCard({ mainImage, title, price, discountPrice, stars, slug }) {
-  const { AddToCart} = useCart();
+function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id}) {
+  const { cartState,AddToCart} = useCart();
   // Convert rating number into FontAwesome stars
  const StarRating = ({ value = 0, max = 5 }) => {
    const full = Math.floor(value);
    const half = value % 1 !== 0;
    const empty = max - full - (half ? 1 : 0);
 
-  
+   
    
 
    return (
@@ -112,7 +113,7 @@ function ProductCard({ mainImage, title, price, discountPrice, stars, slug }) {
 
 
   
-  
+  const { loggedInUserData } = useAuth(); //check the user is login or not
    const productData = {
      mainImage: mainImage,
      title: title,
@@ -120,7 +121,14 @@ function ProductCard({ mainImage, title, price, discountPrice, stars, slug }) {
      discountPrice: discountPrice,
      stars: stars,
      slug: slug,
+     _id : _id
   };
+  const navigate = useNavigate();
+  const RedirectUserToLogin = () => {
+  
+    navigate('/signin');
+  }
+
   
 
   return (
@@ -134,20 +142,33 @@ function ProductCard({ mainImage, title, price, discountPrice, stars, slug }) {
           />
 
           <div className="product-action">
-            <button
-              className="btn btn-outline-dark btn-square"
-              onClick={() => AddToCart(productData)}
-            >
-              <i className="fa fa-shopping-cart"></i>
-            </button>
-            <a href="#" className="btn btn-outline-dark btn-square">
-              <i className="far fa-heart"></i>
-            </a>
+            {loggedInUserData && loggedInUserData.fullName ? (
+              <button
+                className="btn btn-outline-dark btn-square"
+                onClick={() => AddToCart(productData)}
+                disabled={
+                  cartState.find((item) => item._id == _id) ? true : false
+                }
+              >
+                <i className="fa fa-shopping-cart"></i>
+              </button>
+            ) : (
+              <button
+                className="btn btn-outline-dark btn-square"
+                onClick={RedirectUserToLogin}
+              >
+                <i className="fa fa-shopping-cart"></i>
+              </button>
+            )}
+
             <a href="#" className="btn btn-outline-dark btn-square">
               <i className="fa fa-sync-alt"></i>
             </a>
             <a href="#" className="btn btn-outline-dark btn-square">
               <i className="fa fa-search"></i>
+            </a>
+            <a href="#" className="btn btn-outline-dark btn-square">
+              <i className="fa fa-heart"></i>
             </a>
           </div>
         </div>

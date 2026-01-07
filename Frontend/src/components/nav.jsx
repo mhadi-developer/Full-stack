@@ -116,15 +116,16 @@ export default function Nav({ categories }) {
                         0
                       </span>
                     </a>
-                    <a href="" className="btn px-0 ml-3">
-                      <i className="fas fa-shopping-cart text-primary"></i>
+                    <Link to={'/cart'} className="btn px-0 ml-3">
+            
+                     <i className="fas fa-shopping-cart text-primary"></i>
                       <span
                         className="badge text-secondary border border-secondary rounded-circle"
                         style={{ paddingBottom: "2px" }}
                       >
                         {cartState.length}
                       </span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </nav>
