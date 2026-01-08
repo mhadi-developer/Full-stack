@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 const Breadcrumb = (  ) => {
   return (
@@ -6,10 +7,10 @@ const Breadcrumb = (  ) => {
       <div className="row px-xl-5">
         <div className="col-12">
           <nav className="breadcrumb bg-light mb-30">
-            <a className="breadcrumb-item text-dark" href="#">
+            <Link to={'/'} className="breadcrumb-item text-dark">
               Home
-            </a>
-            <a className="breadcrumb-item text-dark" href="#">
+            </Link>
+            <a className="breadcrumb-item text-dark">
               Shop
             </a>
             <span className="breadcrumb-item active"> Shop Details</span>

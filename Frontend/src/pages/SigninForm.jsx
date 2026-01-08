@@ -17,6 +17,7 @@ const signInSchema = z.object({
 
 
 export default function SignInForm() {
+
   const { loggedInUserData, loggedInUserError, loggedInUserLoading } = useAuth();
 
   if (loggedInUserLoading) return <p>loading.....</p>
@@ -36,14 +37,13 @@ export default function SignInForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: zodResolver(signInSchema),
-  });
+    formState: { errors, isSubmitting },} = useForm({
+                            resolver: zodResolver(signInSchema),
+                                    });
     
   const navigate = useNavigate(); // initializing the redirect
     
-    const { postData, data, error, loading } = usePost('http://localhost:7000/users/signin');
+    const { postData, data, loading, error } = usePost('http://localhost:7000/users/signin');
     
     console.log(data);
     console.log(error);

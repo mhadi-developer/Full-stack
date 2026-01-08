@@ -27,6 +27,7 @@ const Details = () => {
   },[])
   
  
+  const productQuantity=cartState.map((item)=>item.quantity)
 
     
   return (
@@ -141,20 +142,26 @@ const Details = () => {
                   </div>
                   <input
                     type="text"
-                    className="form-control bg-secondary border-0 text-center"
-                    value="1"
+                    className="form-control border-0 text-center"
+                    value={productQuantity}
                     readOnly
                   />
                   <div className="input-group-btn">
                     <button
                       className="btn btn-primary btn-plus"
-                      onClick={()=>IncreamentCart(product)}
+                      onClick={() => IncreamentCart(product)}
                     >
                       <i className="fa fa-plus"></i>
                     </button>
                   </div>
                 </div>
-                <button  onClick={()=>AddToCart(product)} className="btn btn-primary px-3">
+                <button
+                  onClick={() => AddToCart(product)}
+                  className="btn btn-primary px-3"
+                  disabled={
+                    cartState.map((item) => item.quantity > 0) ? true : false
+                  }
+                >
                   <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
                 </button>
               </div>

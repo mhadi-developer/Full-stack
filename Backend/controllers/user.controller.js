@@ -1,5 +1,6 @@
 import UserModal from "../Modals/User-modal/userModal.js"
 import bcrypt from "bcrypt"
+import { response } from "express";
 import jwt from "jsonwebtoken"
 
 
@@ -58,7 +59,7 @@ export const SignInUser = async (req, res) => {
         email: registerUser.email,
         name: registerUser.fullName,
         role: registerUser.role
-       }, process.env.JWT_SECRET, { expiresIn: '1.5hr' });
+       }, process.env.JWT_SECRET, { expiresIn: '2hr' });
       
       // signing a server side cookie 
 
@@ -103,3 +104,41 @@ export const LogoutUser = (req, res, next) => {
     })
     .sendStatus(204);
 };
+
+
+
+// update user data controller
+export const updateUser = async (req, res) => {
+  try {
+    const data = req.body;
+    const userId = req.user.id; // from isAuthanticated middleware global req.user
+
+   // filling updated data compatable with user Modal
+    const updatedUserData = {
+      phone: data.mobile,
+      address: {
+        street: data.address1,
+        city: data.city,
+        state: data.province,
+        country: data.country,
+        postalCode:data.zip,
+      },
+    };
+    await UserModal.findByIdAndUpdate(userId, updatedUserData);
+
+    console.log("***********user", userId);
+    console.log("*********data to update ", data);
+
+
+
+    res
+      .status(200)
+      .json({ message: " user updated successfully",  success:true });
+    
+    
+  } catch (error) {
+    console.log(error);
+    res.state(404).json({ message: error });
+    
+  }
+}

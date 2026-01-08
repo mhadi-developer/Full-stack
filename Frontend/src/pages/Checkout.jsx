@@ -9,6 +9,8 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { Controller } from "react-hook-form";
 import { z } from "zod";
+import { usePut } from '../customHooks/usePut';
+import {ToastContainer, toast} from "react-toastify"
 
 
 
@@ -40,7 +42,12 @@ const billingSchema = z.object({
 const Checkout = () => {
     const {loggedInUserData } = useAuth();
     const { cartState } = useCart();
-    const [shippingFee, setShippingFee] = useState(250);
+  const [shippingFee, setShippingFee] = useState(250);
+
+  const { updateUserData, updateData, updateError, updateLoading } = usePut(
+    "http://localhost:7000/users/update"
+  );
+  
    
     const totalCartAmount = () => {
       let totalCartAmount = 0;
@@ -49,23 +56,44 @@ const Checkout = () => {
       });
       return totalCartAmount;
     };
-    const GST = totalCartAmount() * 0.03;
+  const GST = totalCartAmount() * 0.03;
+  
+
+  
+
+
+
+
+
     const {
       register,
-        handleSubmit,
+      handleSubmit,
       control,
-      formState: { errors },
+      reset,
+      formState: { errors, isSubmitting },
     } = useForm({
-        resolver: zodResolver(billingSchema),
-        defaultValues: {
-            fullName: loggedInUserData?.fullName || "",
-            email: loggedInUserData?.email || "",
-            mobile: loggedInUserData?.phone || ""
-        }
+      resolver: zodResolver(billingSchema),
+      defaultValues: {
+        fullName: loggedInUserData?.fullName || "",
+        email: loggedInUserData?.email || "",
+        mobile: loggedInUserData?.phone || "",
+      },
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
       console.log("Billing Data:", data);
+      try {
+        await updateUserData(data);
+        console.log("updated data", updateData);
+        console.log("error in updating user", updateError);
+        toast.success("Updated Data successfully");
+        
+      
+     } catch (error) {
+      toast.error("something went wrong", error);
+     }
+      reset();
+
     };
   return (
     <div>
@@ -158,7 +186,7 @@ const Checkout = () => {
                     <select className="custom-select" {...register("country")}>
                       <option value="">Select Country</option>
                       <option value="United States">United States</option>
-                      <option value="Afghanistan">Pakistan</option>
+                      <option value="Pakistan">Pakistan</option>
                       <option value="Albania">United Kingdom</option>
                     </select>
                     <small className="text-danger">
@@ -201,16 +229,17 @@ const Checkout = () => {
                   </div>
 
                   <div className="col-12">
-                    <button className="btn btn-primary btn-block" type="submit">
-                      Continue
+                    <button
+                      className="btn btn-primary btn-block"
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Saving....." : "  Save Info"}
                     </button>
                   </div>
                 </div>
               </div>
             </form>
-            <button className="btn w-50 btn-saveShipping btn-block my-3" type="submit">
-              Save Shipping Info
-            </button>
           </div>
 
           <div className="col-lg-4">
@@ -324,6 +353,18 @@ const Checkout = () => {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={4500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

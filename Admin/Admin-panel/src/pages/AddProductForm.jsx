@@ -30,7 +30,7 @@ export default function AddProductForm() {
   const [mainImage, setMainImage] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
 
-  const { register, handleSubmit, control, watch, setValue, reset } = useForm({
+  const { register, handleSubmit, control, watch, setValue, reset , formState:{error , isSubmitted} } = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       title: "",
@@ -356,8 +356,8 @@ export default function AddProductForm() {
           )}
         </div>
 
-        <button className="btn btn-primary w-100" disabled={submitLoading}>
-          {submitLoading ? "Submitting..." : "Add Product"}
+        <button className="btn btn-primary w-100" disabled={isSubmitted}>
+          {isSubmitted ? "Submitting..." : "Add Product"}
         </button>
       </form>
 
