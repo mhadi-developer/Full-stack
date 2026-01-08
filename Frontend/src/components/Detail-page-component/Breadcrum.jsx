@@ -12,7 +12,7 @@ const Breadcrumb = (  ) => {
             <a className="breadcrumb-item text-dark" href="#">
               Shop
             </a>
-            <span className="breadcrumb-item active"> Cart</span>
+            <span className="breadcrumb-item active"> Shop Details</span>
           </nav>
         </div>
       </div>

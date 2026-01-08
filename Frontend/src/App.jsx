@@ -19,6 +19,7 @@ import AuthProvider from './Custom-context/AuthProvider.jsx';
 import UserProfile from './pages/UserProfile.jsx';
 import Protected from './pages/Protected.jsx';
 import CartProvider from './Custom-context/CartProvider.jsx';
+import Checkout from './pages/Checkout.jsx';
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -72,7 +73,23 @@ function App() {
           <Routes>
             <Route path="/" element={<Home categories={categories} />} />
             <Route path="/about" element={<About />} />
-            <Route path="/cart" element={<Protected><Cart /> </Protected>} />
+            <Route
+              path="/cart"
+              element={
+                <Protected>
+                  <Cart />{" "}
+                </Protected>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <Protected>
+                  <Checkout />
+                </Protected>
+              }
+            />
+
             <Route path="/contact" element={<Contact />} />
             <Route path="/products/:slug" element={<Details />} />
             <Route path="/signup" element={<SignupForm />} />

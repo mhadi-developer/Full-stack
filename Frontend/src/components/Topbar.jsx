@@ -98,7 +98,7 @@ const Topbar = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  USD
+                  PKR
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>

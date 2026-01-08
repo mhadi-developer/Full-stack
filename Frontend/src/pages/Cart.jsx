@@ -1,10 +1,19 @@
 import React from 'react'
 import Breadcrumb from '../components/Detail-page-component/BreadCrum.jsx'
 import { useCart } from '../Custom-context/CartProvider.jsx'
+import CartSummary from '../components/CartSummary.jsx';
 
 const Cart = () => {
   
-  const { cartState, IncreamentCart, DecrementCart , RemoveFromCart , ClearCart} = useCart();
+  const { cartState, IncreamentCart, DecrementCart, RemoveFromCart, ClearCart } = useCart();
+  // calculate total cart amount
+const totalCartAmount = () => {
+    let totalCartAmount = 0;
+    cartState.forEach((item) => {
+      totalCartAmount += item?.discountPrice * item?.quantity;
+    })
+    return totalCartAmount;
+  }
   return (
     <div>
       <Breadcrumb />
@@ -90,45 +99,7 @@ const Cart = () => {
           </div>
 
           {/* Cart Summary */}
-          <div className="col-lg-4">
-            <form className="mb-4 mt-2">
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control border-0 p-4"
-                  placeholder="Coupon Code"
-                />
-                <button className="btn btn-primary">Apply Coupon</button>
-              </div>
-            </form>
-
-            <h5 className="text-uppercase mb-3 mt-4">
-              <span className="bg-secondary pe-3">Cart Summary</span>
-            </h5>
-
-            <div className="bg-light p-4 mb-5">
-              <div className="border-bottom pb-2">
-                <div className="d-flex justify-content-between mb-3">
-                  <h6>Subtotal</h6>
-                  <h6>$150</h6>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <h6 className="fw-medium">Shipping</h6>
-                  <h6 className="fw-medium">$10</h6>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <div className="d-flex justify-content-between mt-2">
-                  <h5>Total</h5>
-                  <h5>$160</h5>
-                </div>
-                <button className="btn btn-primary fw-bold my-3 py-3 w-100">
-                  Proceed To Checkout
-                </button>
-              </div>
-            </div>
-          </div>
+          <CartSummary totalCartAmount = {totalCartAmount} />
         </div>
       </div>
     </div>
