@@ -10,7 +10,8 @@ import "react-phone-input-2/lib/style.css";
 import { Controller } from "react-hook-form";
 import { z } from "zod";
 import { usePut } from '../customHooks/usePut';
-import {ToastContainer, toast} from "react-toastify"
+import { ToastContainer, toast } from "react-toastify"
+import { stripePromise } from '../../Libraries/stripePayment.config';
 
 
 
@@ -57,11 +58,36 @@ const Checkout = () => {
       return totalCartAmount;
     };
   const GST = totalCartAmount() * 0.03;
-  
+   //------------------------------------------------------------------------------------
 
-  
+ // stripe payment handler 
+ 
+const handleCheckoutPayment = async ({cartState}) => {
+  try {
+      const stripe = await stripePromise;
+   
+    const res = await fetch("http://localhost:7000/payment/checkout/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ items: cartState }),
+    });
 
+    const data = await res.json();
 
+    if (data.sessionId) {
+      await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
+      });
+    
+    }
+  } catch (error) {
+    console.error("Stripe checkout error:", error);
+  }
+};
+
+//-------------------------------------------------------------------------------------  
 
 
 
@@ -302,10 +328,13 @@ const Checkout = () => {
                         type="radio"
                         className="custom-control-input"
                         name="payment"
-                        id="paypal"
+                        id="stripepayment"
                       />
-                      <label className="custom-control-label" htmlFor="paypal">
-                        Paypal
+                      <label
+                        className="custom-control-label"
+                        htmlFor="stripepayment"
+                      >
+                        Stripe payment
                       </label>
                     </div>
                   </div>
@@ -316,13 +345,13 @@ const Checkout = () => {
                         type="radio"
                         className="custom-control-input"
                         name="payment"
-                        id="directcheck"
+                        id="cashondelievry"
                       />
                       <label
                         className="custom-control-label"
                         htmlFor="directcheck"
                       >
-                        Direct Check
+                        Cash on Delievry
                       </label>
                     </div>
                   </div>
@@ -344,8 +373,11 @@ const Checkout = () => {
                     </div>
                   </div>
 
-                  <button className="btn btn-block btn-primary font-weight-bold py-3">
-                    Place Order
+                  <button
+                    className="btn btn-block btn-primary font-weight-bold py-3"
+                    onClick={()=>handleCheckoutPayment(cartState)}
+                  >
+                    Checkout Payment
                   </button>
                 </div>
               </div>

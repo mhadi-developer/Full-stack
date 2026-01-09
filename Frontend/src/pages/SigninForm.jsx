@@ -37,11 +37,9 @@ export default function SignInForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },} = useForm({
-                            resolver: zodResolver(signInSchema),
-                                    });
-    
-  const navigate = useNavigate(); // initializing the redirect
+    formState: { errors, isSubmitting }, } = useForm({ resolver: zodResolver(signInSchema), });
+  
+  
     
     const { postData, data, loading, error } = usePost('http://localhost:7000/users/signin');
     
