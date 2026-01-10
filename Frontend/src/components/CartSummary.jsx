@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 const CartSummary = ({ totalCartAmount }) => {
 
     totalCartAmount = totalCartAmount();
-    const [shippingFee, setShippingFee] = useState(250);
+    const [shippingFee, setShippingFee] = useState(20);
     const GST = (totalCartAmount * 0.03);
   return (
     <div className="col-lg-4">

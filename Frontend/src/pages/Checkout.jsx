@@ -43,7 +43,7 @@ const billingSchema = z.object({
 const Checkout = () => {
     const {loggedInUserData } = useAuth();
     const { cartState } = useCart();
-  const [shippingFee, setShippingFee] = useState(250);
+  const [shippingFee, setShippingFee] = useState(20);
 
   const { updateUserData, updateData, updateError, updateLoading } = usePut(
     "http://localhost:7000/users/update"
@@ -62,28 +62,47 @@ const Checkout = () => {
 
  // stripe payment handler 
  
-const handleCheckoutPayment = async ({cartState}) => {
+const handleCheckoutPayment = async () => {
   try {
-      const stripe = await stripePromise;
+
+
+    console.log('purchasung cart list',cartState);
+    
+
+
+    const purchaseItem = cartState.map((item) => {
+      return {
+        title: item.title,
+        unitPrice: item.discountPrice,
+        quantity:item.quantity
+      }
+    })
+
+
+    console.log('stripe payment list',purchaseItem);
+    
+
+
    
     const res = await fetch("http://localhost:7000/payment/checkout/sessions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ items: cartState }),
+      body: JSON.stringify({ items: purchaseItem }),
     });
 
-    const data = await res.json();
+    const session = await res.json();
 
-    if (data.sessionId) {
-      await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
     
-    }
-  } catch (error) {
-    console.error("Stripe checkout error:", error);
+    console.log("session respose***********",session);
+    
+if (session.url) {
+  window.location.href = session.url;
+}
+}
+   catch (err) {
+    console.error("checkout Error", err);
   }
 };
 
@@ -375,7 +394,7 @@ const handleCheckoutPayment = async ({cartState}) => {
 
                   <button
                     className="btn btn-block btn-primary font-weight-bold py-3"
-                    onClick={()=>handleCheckoutPayment(cartState)}
+                    onClick={handleCheckoutPayment}
                   >
                     Checkout Payment
                   </button>

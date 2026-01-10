@@ -20,6 +20,9 @@ import UserProfile from './pages/UserProfile.jsx';
 import Protected from './pages/Protected.jsx';
 import CartProvider from './Custom-context/CartProvider.jsx';
 import Checkout from './pages/Checkout.jsx';
+import PaymentSuccess from './pages/PaymentSuccsess.jsx';
+import PaymentCancellation from './pages/PaymentCancel.jsx';
+
 
 // Create Cart Context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -91,6 +94,18 @@ function App() {
             />
 
             <Route path="/contact" element={<Contact />} />
+            <Route
+              path="/payment/success"
+              element={
+                <Protected>
+                  <PaymentSuccess />
+                </Protected>
+              }
+            />
+            <Route path="/payment/cancel" element={<Protected>
+              <PaymentCancellation />
+            </Protected>} />
+
             <Route path="/products/:slug" element={<Details />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/signin" element={<SignInForm />} />
