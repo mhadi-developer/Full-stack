@@ -96,10 +96,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route
               path="/payment/success"
-              element={
-                <Protected>
+              element={ 
                   <PaymentSuccess />
-                </Protected>
               }
             />
             <Route path="/payment/cancel" element={<Protected>

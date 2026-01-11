@@ -24,12 +24,17 @@ export const stripePayment = async (req,res,next) => {
     console.log('&&&&&&&&&&&&&&&&&&&&lineitems',lineItems);
     
 
+    console.log("****************", req?.user?.id);
+    
+
    const session = await stripe.checkout.sessions.create({
-     success_url: "http://localhost:5173/payment/success",
-     cancel_url:"http://localhost:5173/payment/cancel",
+     success_url:
+       "http://localhost:5173/payment/success?session_id={CHECKOUT_SESSION_ID}",
+     cancel_url: "http://localhost:5173/payment/cancel",
      line_items: lineItems,
      mode: "payment",
-     payment_method_types:['card']
+     payment_method_types: ["card"],
+     client_reference_id: req?.user?.id,
    });
     
     
@@ -40,3 +45,44 @@ export const stripePayment = async (req,res,next) => {
   
  }
 };
+
+
+export const confirmOrder = async(req, res, next) => {
+  try {
+  
+    const { sessionId } = req.body;
+
+    console.log("session id from ****front end ****", sessionId);
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    // list of products user order
+    const lineItems = await stripe.checkout.sessions.listLineItems(
+      sessionId,
+      {
+        limit: 100,
+      });
+
+    console.log("sesionnnnnnnnnnnnnnnn onbjjjjjjjj", session);
+
+
+    res.status(200).json({
+   lineItems
+    });
+    
+    // create order and save to DB
+
+
+
+
+
+} catch (error) {
+  
+    
+    console.log("session retireve error", error);
+    
+    
+    
+}
+  
+} 

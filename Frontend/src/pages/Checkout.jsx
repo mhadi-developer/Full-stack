@@ -11,7 +11,6 @@ import { Controller } from "react-hook-form";
 import { z } from "zod";
 import { usePut } from '../customHooks/usePut';
 import { ToastContainer, toast } from "react-toastify"
-import { stripePromise } from '../../Libraries/stripePayment.config';
 
 
 
@@ -69,7 +68,7 @@ const handleCheckoutPayment = async () => {
     console.log('purchasung cart list',cartState);
     
 
-
+ // stripe object compatablity 
     const purchaseItem = cartState.map((item) => {
       return {
         title: item.title,
