@@ -22,6 +22,7 @@ import CartProvider from './Custom-context/CartProvider.jsx';
 import Checkout from './pages/Checkout.jsx';
 import PaymentSuccess from './pages/PaymentSuccsess.jsx';
 import PaymentCancellation from './pages/PaymentCancel.jsx';
+import ConfirmedOrderDetails from './pages/ConfirmOrderDetails.jsx';
 
 
 // Create Cart Context
@@ -80,7 +81,7 @@ function App() {
               path="/cart"
               element={
                 <Protected>
-                  <Cart />{" "}
+                  <Cart />
                 </Protected>
               }
             />
@@ -94,15 +95,13 @@ function App() {
             />
 
             <Route path="/contact" element={<Contact />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/cancel" element={<PaymentCancellation />} />
+
             <Route
-              path="/payment/success"
-              element={ 
-                  <PaymentSuccess />
-              }
+              path="/order/confirm/detail"
+              element={<ConfirmedOrderDetails />}
             />
-            <Route path="/payment/cancel" element={<Protected>
-              <PaymentCancellation />
-            </Protected>} />
 
             <Route path="/products/:slug" element={<Details />} />
             <Route path="/signup" element={<SignupForm />} />

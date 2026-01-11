@@ -8,6 +8,7 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const [sessionId, setSessionId] = useState(null);
   const [orderResponse, setOrderResponse] = useState();
+  const [orderRecord, setOrderRecord] = useState();
   const [loading, setLoading] = useState(true);
 
   // 1️⃣ Read session_id from URL
@@ -20,6 +21,8 @@ const PaymentSuccess = () => {
 
   // 2️⃣ Confirm order only when sessionId exists
   useEffect(() => {
+    console.log("authorized user order", loggedInUserData);
+    
     if (!sessionId || !(loggedInUserData && loggedInUserData?.fullName) ) return;
 
     const confirmOrder = async () => {
@@ -41,12 +44,20 @@ const PaymentSuccess = () => {
           throw new Error("Order confirmation failed");
         }
 
-        const orderedConfirmResponse = await res.json();
-        setOrderResponse(orderedConfirmResponse);
+        const { order } = await res.json();
+        console.log(order);
+        
+       const orderInfo = {
+         id: order._id,
+         status: order.orderStatus,
+       };
+       
+        setOrderRecord(orderInfo);
+        setOrderResponse(order);
 
         if (res) {
 
-          console.log(orderedConfirmResponse);
+          console.log(order);
          
         }
 
@@ -60,8 +71,13 @@ const PaymentSuccess = () => {
 
     confirmOrder();
   }, [sessionId, loggedInUserData]);
+   
 
-  console.log(" products that user order$$$$$$$$$$$$",orderResponse);
+  
+
+
+  
+  console.log(" products that user order$$$$$$$$$$$$", orderRecord);
   
 
   if (loading) {
@@ -97,10 +113,8 @@ const PaymentSuccess = () => {
 
           <div className="bg-light rounded-3 p-3 mb-4 text-start">
             <div className="d-flex justify-content-between mb-2">
-              <span className="text-muted small">Session ID</span>
-              <span className="fw-medium text-dark">
-                {sessionId?.slice(0, 14)}...
-              </span>
+              <span className="text-muted small">Order ID</span>
+              <span className="fw-medium text-dark">{orderRecord?.id}</span>
             </div>
             <div className="d-flex justify-content-between">
               <span className="text-muted small">Payment Method</span>
@@ -109,7 +123,10 @@ const PaymentSuccess = () => {
           </div>
 
           <div className="d-grid gap-3">
-            <Link to="/orders" className="btn btn-success btn-lg rounded-pill">
+            <Link
+              to={`/order/confirm/detail?orderId=${orderRecord?.id}`}
+              className="btn btn-success btn-lg rounded-pill"
+            >
               View Order
             </Link>
             <Link to="/" className="btn btn-primary btn-lg rounded-pill">

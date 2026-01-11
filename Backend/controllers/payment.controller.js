@@ -1,5 +1,12 @@
 import Stripe from "stripe";
+import orderModal from "../Modals/OrderModal/order.modal.js";
+import { transformCheckoutSessionToOrder } from "../utilities/orderTranformer.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+
+
+
+// controllers----------------------------------------------------------
 
 export const stripePayment = async (req,res,next) => {
   try {
@@ -47,42 +54,90 @@ export const stripePayment = async (req,res,next) => {
 };
 
 
-export const confirmOrder = async(req, res, next) => {
+//-----------------------------------------------------------------------------
+
+export const confirmOrder = async (req, res, next) => {
   try {
-  
-    const { sessionId } = req.body;
+    const { sessionId, userId } = req.body;
 
-    console.log("session id from ****front end ****", sessionId);
-
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-    // list of products user order
-    const lineItems = await stripe.checkout.sessions.listLineItems(
-      sessionId,
-      {
-        limit: 100,
+    if (!sessionId || !userId) {
+      return res.status(400).json({
+        message: "sessionId and userId are required",
       });
+    }
 
-    console.log("sesionnnnnnnnnnnnnnnn onbjjjjjjjj", session);
-
-
-    res.status(200).json({
-   lineItems
+    // 1️⃣ Retrieve session from Stripe
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["line_items"],
     });
-    
-    // create order and save to DB
+
+    if (!session || session.payment_status !== "paid") {
+      return res.status(400).json({
+        message: "Payment not completed",
+      });
+    }
+
+    // 2️⃣ Transform Stripe session → Order object
+    const orderObject = transformCheckoutSessionToOrder(session, userId);
+
+    // 3️⃣ Idempotent DB write (CRITICAL)
+    const orderSavedDB = await orderModal.findOneAndUpdate(
+      { stripeSessionId: session.id }, // unique key
+      { $setOnInsert: orderObject },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+
+    // 4️⃣ Return order
+    res.status(200).json({
+      success: true,
+      order: orderSavedDB,
+    });
+  } catch (error) {
+    console.error("Confirm order error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error?.message || "Something went wrong",
+    });
+  }
+};
 
 
 
 
+//------------------------------------------------------------------------------
 
-} catch (error) {
+export const getOrderById = async (req, res, next) => {
+  try {
+    const { order_id } = req.body;
+
+    console.log(
+      "finding order by tracking id()))))))))))))))))))))=>",
+      order_id
+    );
+
+    const trackingId = order_id;
+
+    const trackedOrder = await orderModal.findById(trackingId);
+
+    console.log(
+      "***************************************tracked order=>",
+      trackedOrder
+    );
+
+
+    res.status(200).json(trackedOrder);
+  }
+  catch (err) {
+    res.json({ message: err?.message || " something went wronng" });
+  }
   
-    
-    console.log("session retireve error", error);
-    
-    
-    
+  
 }
-  
-} 
+
+
+
+
