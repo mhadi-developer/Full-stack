@@ -1,9 +1,9 @@
 body.background-color{
 background: linear-gradient(60deg,
-            #FFD333 20%,
-            #e9d69f 50%,
-            #5a636a 100%);
-background-blend-mode: overlay;
+            #FFD333 25%,
+            #e9d69f 65%,
+            #5a636a 85%);
+background-blend-mode:hue;
 }
 
 
