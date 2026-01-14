@@ -24,7 +24,7 @@ data?.orders?.map((order, index) => {
         <div class="row g-4">
           <div class="col-12">
             <div class="bg-secondary rounded h-100 p-4">
-              <h6 class="mb-4 text-primary">Order Record</h6>
+              <h6 class="mb-4 text-primary">Orders Record</h6>
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -40,9 +40,9 @@ data?.orders?.map((order, index) => {
                   </thead>
                   <tbody>
                     {data?.orders &&
-                      data?.orders?.map((order) => (
+                      data?.orders?.map((order , index) => (
                         <tr>
-                          <th scope="row">1</th>
+                          <th scope="row">{index +1 }</th>
                           <td>{order?.customer?.name}</td>
                           <td>{order?.customer?.email}</td>
                           <td>{order?.paymentStatus}</td>
@@ -52,7 +52,7 @@ data?.orders?.map((order, index) => {
                               .local()
                               .format("MMMM Do YYYY, h:mm A")}
                           </td>
-                          <td>{order?.totalAmount}/-PKR</td>
+                          <td>{order?.totalAmount}-/PKR</td>
                         </tr>
                       ))}
                   </tbody>

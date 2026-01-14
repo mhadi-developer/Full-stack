@@ -19,7 +19,18 @@ const cartReducer = (state, action) => {
       
       // checking if same item is already  added to cart , if it exist increase its quantity only ;
       const existingItem = state.find(item => item._id == cartItem._id);
+      // add product in DB
 
+
+
+
+
+
+
+
+
+
+// adding product in global context state/memory
       if (existingItem) {
        state.map((item) => {
           return item._id == cartItem._id ?
