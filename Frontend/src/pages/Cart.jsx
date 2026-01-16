@@ -88,18 +88,18 @@ const totalCartAmount = () => {
                   ))}
               </tbody>
             </table>
-            
-              <button
-                className="btn btn-lg btn-danger my-1"
+
+            <button
+              className="btn btn-lg btn-danger my-1"
               onClick={() => ClearCart()}
-              disabled= { cartState.length == 0 ? true : false}
-              >
-               Clear Cart
-              </button>
+              disabled={cartState.length == 0 ? true : false}
+            >
+              Clear Cart <i className="fa fa-times"></i>
+            </button>
           </div>
 
           {/* Cart Summary */}
-          <CartSummary totalCartAmount = {totalCartAmount} />
+          <CartSummary totalCartAmount={totalCartAmount} />
         </div>
       </div>
     </div>

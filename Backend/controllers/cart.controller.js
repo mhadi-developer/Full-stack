@@ -1,4 +1,4 @@
-import cartModal from "../Modals/CartModal/cart.modal";
+import  cartModal  from  "../Modals/CartModal/cart.modal.js";
 
 
 
@@ -6,11 +6,40 @@ import cartModal from "../Modals/CartModal/cart.modal";
 export const addProductToCart = async(req, res, next) => {
     try {
         const item = req.body;
-        const addedItem = await cartModal.create(item);
+        const { userId } = req.params;
+        
+        console.log({
+            userId,
+             item
+        });
+
+
+
+        const product = {
+            productId:item._id,
+            title: item.title,
+            price: item.discountPrice,
+            quantity: item.quantity
+
+
+        }
+
+
+
+
+        console.log("*************^^^^^^^^^^^",product);
+        
+        // first find all the cart items of user if exist (final return is array... compatable with schema)
+        const cartItems = cartModal.findById({ userId });
+        
+         console.log("&&&&&&&&&&&&&&&&&& carItems", cartItems);
+         
+
+        // const addedItem = await cartModal.create(item);
 
         res.status(201).json({
             success: true,
-            addedItem
+            // addedItem
         })
 
 
@@ -25,13 +54,22 @@ export const addProductToCart = async(req, res, next) => {
 
 
 //------------------------------------------------------------
-export const getAllCartItems = async(req, res, next) => { 
+export const getAllCartItemsByUser = async(req, res, next) => { 
     try {
+        const { userId } = req.params;
+        console.log("+++++++++++userId", userId);
 
-        const cartItems = await cartModal.find({});
+
+        const cartItems = await cartModal.find({userId});
+
+
+
+
+        console.log("********************",cartItems);
+        
         res.status(200).json({
             success: true,
-           cartItems
+          data : cartItems
         })
         
     } catch (error) {
@@ -88,7 +126,12 @@ export const updateItemById = async(req, res, next) => {
 
 
 
-  } catch (error) {}
+    } catch (error) {
+        res.json({
+            success: false,
+            message: error?.message || "cannot update the item"
+        })
+  }
 };
 
 

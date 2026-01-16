@@ -7,7 +7,7 @@ import * as z from "zod";
 import "react-phone-input-2/lib/bootstrap.css";
 import { usePost } from "../customHooks/usePost";
 import { useAuth } from "../Custom-context/AuthProvider";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 
 const schema = z
   .object({
@@ -39,14 +39,21 @@ export default function SignupForm() {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors , isSubmitting},
   } = useForm({
     resolver: zodResolver(schema),
   });
 
   const onSubmit =  async (data) => {
-     await  postData(data);
+     data = await  postData(data);
   };
+  console.log("**********************SignUp******************************",data);
+  
+
+  if (data) {
+     window.location.href = "/"
+   }
+
 
   return (
     <div className="container py-5 px-3">
@@ -136,8 +143,8 @@ export default function SignupForm() {
                   </div>
                 </div>
 
-                <button className="btn btn-primary w-100" type="submit">
-                  Create Account
+                <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting? true:false}>
+                 {isSubmitting? "CreatingAccount.....": " CreateAcount"}
                 </button>
               </form>
             </div>

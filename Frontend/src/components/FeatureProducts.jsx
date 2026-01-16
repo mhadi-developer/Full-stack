@@ -75,7 +75,7 @@ import { Link } from "react-router";
 import { useAuth } from "../Custom-context/AuthProvider";
 import { useNavigate } from "react-router";
 // Reusable card component
-function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id}) {
+function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id }) {
   const { cartState,AddToCart} = useCart();
   // Convert rating number into FontAwesome stars
  const StarRating = ({ value = 0, max = 5 }) => {
@@ -121,13 +121,16 @@ function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id
      discountPrice: discountPrice,
      stars: stars,
      slug: slug,
-     _id : _id
+     _id: _id,
+    
   };
   const navigate = useNavigate();
   const RedirectUserToLogin = () => {
   
     navigate('/signin');
   }
+
+  
 
   
 

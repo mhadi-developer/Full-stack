@@ -1,5 +1,8 @@
 import React, { use } from 'react'
-import { createContext ,useState  , useContext , useReducer} from 'react'
+import { useEffect } from 'react';
+import { createContext, useState, useContext, useReducer } from 'react'
+import { useAuth } from './AuthProvider';
+import { json } from 'zod';
 
 
 const CartContext = createContext();
@@ -8,6 +11,17 @@ const CartContext = createContext();
 
 const cartReducer = (state, action) => {
   switch (action.type) {
+
+
+    // providing the cart fetched from backend/DB  as initial ,
+
+    case "SET_CART": {
+      const newState = action.payload;
+      return newState;
+     }
+
+
+
       case "ADD_TO_CART": {
           action.payload.quantity = 1;
           const cartItem = action.payload;
@@ -22,14 +36,6 @@ const cartReducer = (state, action) => {
       // add product in DB
 
 
-
-
-
-
-
-
-
-
 // adding product in global context state/memory
       if (existingItem) {
        state.map((item) => {
@@ -41,12 +47,7 @@ const cartReducer = (state, action) => {
       else {
         const newState = [...state, { ...cartItem , quantity:1}];
         return newState;
-      }
-      
-      
-  
-         
-          
+      }  
     }
 
     case "REMOVE_FROM_CART": {
@@ -82,7 +83,6 @@ const cartReducer = (state, action) => {
           );
           const filteredState = newState.filter(item => !(item.quantity == 0)); //removing the item with 0 qnty from cart list 
 
-           filteredState;
           console.log("**********decrease qnty******", filteredState);
           
           return filteredState;
@@ -92,29 +92,113 @@ const cartReducer = (state, action) => {
           return state;
   }
 };
+
+
+
  // reducer always have to return newstate based on action type.
 
 
 
 const CartProvider = ({ children }) => {
-    
-    const [cart, setCart] = useState([]);
+ 
+  const [cart, setCart] = useState([]);
 
-    
-    const [  cartState , dispatch] = useReducer(cartReducer, cart); // useReducer hook for cart state managment (complex state managment)
-
-
-    //defining actions for cart Reducer
-
-    const AddToCart = (product) => dispatch({ type: 'ADD_TO_CART' , payload: product});
-    const RemoveFromCart = (_id) => dispatch({ type: 'REMOVE_FROM_CART', payload: _id });
-    const ClearCart = () => dispatch({ type: 'CLEAR_CART' });
-    const IncreamentCart = (productId) =>
-      dispatch({ type: "INCREMENT_CART", payload: productId });
-    const DecrementCart = (productId) =>
-      dispatch({ type: "DECREMENT_CART", payload: productId });
+  const [cartState, dispatch] = useReducer(cartReducer, cart); // useReducer hook for cart state managment (complex state managment)
 
 
+
+
+
+  const { loggedInUserData } = useAuth();
+  
+  console.log("---------------Cart Provider", loggedInUserData);
+  console.log("-----------", loggedInUserData?.fullName);
+  console.log("----------------------", loggedInUserData?._id);
+
+
+
+
+  //defining actions for cart Reducer----------------------------------------------------
+
+
+  //--------------------(Api-call)----------------------------------------------------
+ const fetchCartByUserId = async (userId) => {
+   try {
+   
+      if (!userId) return;
+
+      const res = await fetch(`http://localhost:7000/cart/items/${userId}`);
+
+     const { data } = await res.json();
+     console.log("response from the Backend",data);
+     
+      dispatch({ type: "SET_CART", payload: data?.items || [] });
+    }
+    catch (error) {
+     console.log("error fetching cart items", error);
+   }
+ };
+
+  
+  // Add to cart operation....
+  const AddToCart = async (product) => {
+    try {
+      // Update local state
+      dispatch({ type: "ADD_TO_CART", payload: product });
+
+      // Ensure user ID exists
+      if (!loggedInUserData?._id) {
+        console.error("User not logged in");
+        return;
+      }
+
+      console.log(product);
+      const newProduct =  { ...product, quantity: 1 };
+      console.log(">>>>>>>>>>>>>>>>>>",newProduct);
+      
+      // Make POST request
+      const response = await fetch(
+        `http://localhost:7000/cart/add/${loggedInUserData._id}`,
+        {
+          method: "POST",
+          credentials: "include", // sends cookies if needed
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newProduct), // FIXED: JSON.stringify (capital J)
+        }
+      );
+
+      // Parse response (optional)
+      const data = await response.json();
+      console.log("Add to cart response:", data);
+
+      // Optional: handle errors from server
+      if (!response.ok) {
+        console.error("Server error:", data.message || response.statusText);
+      }
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    }
+  };
+
+  const RemoveFromCart = (_id) =>
+    dispatch({ type: "REMOVE_FROM_CART", payload: _id });
+  const ClearCart = () => dispatch({ type: "CLEAR_CART" });
+  const IncreamentCart = (productId) =>
+    dispatch({ type: "INCREMENT_CART", payload: productId });
+  const DecrementCart = (productId) =>
+    dispatch({ type: "DECREMENT_CART", payload: productId });
+
+
+
+
+  // load the cart on first render
+  useEffect(() => {
+    if (loggedInUserData?._id) {
+      fetchCartByUserId(loggedInUserData?._id);
+    }
+  }, [loggedInUserData]);
 
   return (
     <CartContext.Provider

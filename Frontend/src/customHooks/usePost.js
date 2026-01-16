@@ -5,6 +5,7 @@ export function usePost(url) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+
   const postData = async (data, options = {}) => {
     setLoading(true);
       setError(null);
@@ -22,6 +23,7 @@ export function usePost(url) {
       });
 
       const result = await response.json();
+
 
       if (!response.ok) {
         throw new Error(result.message || "Something went wrong");

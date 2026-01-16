@@ -3,8 +3,9 @@ import "dotenv/config";
 import productRoutes from "./routes/product.routes.js";
 import categoryRoutes from "./routes/catagory.routes.js";
 import userRoutes from "./routes/user.routes.js";
-import paymentRoutes from "./routes/payment.routes.js"
-import orderRoutes from "./routes/orderOperations.routes.js"
+import paymentRoutes from "./routes/payment.routes.js";
+import orderRoutes from "./routes/orderOperations.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
@@ -39,6 +40,7 @@ app.use(categoryRoutes);
 app.use(userRoutes);
 app.use(paymentRoutes);
 app.use(orderRoutes);
+app.use(cartRoutes)
 
 // START SERVER
 const startServer = async () => {

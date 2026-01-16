@@ -18,11 +18,13 @@ import jwt from "jsonwebtoken"
      
      console.log("*****hashed password", data.password);
 
-     await UserModal.create(data);
+    const  signUpdata = await UserModal.create(data);
 
-     res.json({
-         message:"user data submited"
-     })
+     res.status(201).json({
+       message: "user data submited",
+       success: true,
+       data: signUpdata,
+     });
      
 }
 
