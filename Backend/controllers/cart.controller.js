@@ -2,65 +2,85 @@ import  cartModal  from  "../Modals/CartModal/cart.modal.js";
 
 
 
+export const addProductToCart = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const body = req.body;
 
-export const addProductToCart = async(req, res, next) => {
-    try {
-        const item = req.body;
-        const { userId } = req.params;
-        
-        console.log({
-            userId,
-             item
-        });
+    const product = {
+      productId: body._id,
+      title: body.title,
+      price: body.discountPrice,
+      quantity: body.quantity || 1,
+    };
 
+    // Get or create cart safely
+    const cart = await getUserCart(userId);
 
+    // Check if product already exists in cart
+    const item = cart.items.find(
+      (i) => i.productId.toString() === product.productId
+    );
 
-        const product = {
-            productId:item._id,
-            title: item.title,
-            price: item.discountPrice,
-            quantity: item.quantity
+    if (item) {
+      item.quantity += product.quantity;
+    } else {
+      cart.items.push(product); // push object, not array
+    }
 
+    await cart.save();
 
+    res.status(201).json({
+      success: true,
+      cart,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Could not add item to cart",
+    });
+  }
+};
+
+//--------------------------------------------------------------------
+const getUserCart = async (userId) => {
+  try {
+    // First try to find existing cart
+    let cart = await cartModal.findOne({ user: userId });
+
+    if (!cart) {
+      // Use try/catch to safely create new cart and handle race condition
+      try {
+        cart = await cartModal.create({ user: userId, items: [] });
+      } catch (err) {
+        if (err.code === 11000) {
+          // Cart already created by another request, fetch it
+          cart = await cartModal.findOne({ user: userId });
+        } else {
+          throw err; // other errors
         }
+      }
+    }
 
-
-
-
-        console.log("*************^^^^^^^^^^^",product);
-        
-        // first find all the cart items of user if exist (final return is array... compatable with schema)
-        const cartItems = cartModal.findById({ userId });
-        
-         console.log("&&&&&&&&&&&&&&&&&& carItems", cartItems);
-         
-
-        // const addedItem = await cartModal.create(item);
-
-        res.status(201).json({
-            success: true,
-            // addedItem
-        })
-
-
-
-    } catch (error) {
-        res.json({
-            success:false,
-            message: error?.message || "could not added item in cart something went wrong"
-        })
+    return cart;
+  } catch (error) {
+    console.log("getUserCart error =>", error.message);
+    throw new Error(error.message); // propagate to main controller
   }
 };
 
 
 //------------------------------------------------------------
-export const getAllCartItemsByUser = async(req, res, next) => { 
+export const getAllCartItemsByUser = async (req, res, next) => { 
+    
+    const { userId } = req.params;
+    console.log("--------------- userId", userId);
+    
+
     try {
-        const { userId } = req.params;
-        console.log("+++++++++++userId", userId);
 
-
-        const cartItems = await cartModal.find({userId});
+        const cartItems = await cartModal.findOne({ user:userId});
 
 
 
@@ -69,7 +89,7 @@ export const getAllCartItemsByUser = async(req, res, next) => {
         
         res.status(200).json({
             success: true,
-          data : cartItems
+          data : cartItems?.items || []
         })
         
     } catch (error) {

@@ -130,7 +130,7 @@ const CartProvider = ({ children }) => {
       const res = await fetch(`http://localhost:7000/cart/items/${userId}`);
 
      const { data } = await res.json();
-     console.log("response from the Backend",data);
+     console.log("response from the Backend fetched cart of user",data);
      
       dispatch({ type: "SET_CART", payload: data?.items || [] });
     }
