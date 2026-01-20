@@ -6,11 +6,15 @@ import CartSummary from '../components/CartSummary.jsx';
 const Cart = () => {
   
   const { cartState, IncreamentCart, DecrementCart, RemoveFromCart, ClearCart } = useCart();
+
+
+  console.log("add to cart state", cartState);
+  
   // calculate total cart amount
 const totalCartAmount = () => {
     let totalCartAmount = 0;
     cartState.forEach((item) => {
-      totalCartAmount += item?.discountPrice * item?.quantity;
+      totalCartAmount += item?.price * item?.quantity;
     })
     return totalCartAmount;
   }
@@ -38,16 +42,14 @@ const totalCartAmount = () => {
                     <tr key={item._id}>
                       <td className="align-middle">
                         <img
-                          src={item?.mainImage?.secure_url}
+                          src={item?.image?.secure_url}
                           alt="product"
                           style={{ width: "50px" }}
                           className="me-2"
                         />
                         {item.title}
                       </td>
-                      <td className="align-middle">
-                        {item.discountPrice}/-Pkr
-                      </td>
+                      <td className="align-middle">{item.price}/-Pkr</td>
                       <td className="align-middle">
                         <div
                           className="input-group quantity mx-auto"
@@ -67,19 +69,19 @@ const totalCartAmount = () => {
                           />
                           <button
                             className="btn btn-sm btn-primary"
-                            onClick={() => IncreamentCart(item)}
+                            onClick={() => IncreamentCart(item.productId)}
                           >
                             <i className="fa fa-plus"></i>
                           </button>
                         </div>
                       </td>
                       <td className="align-middle">
-                        {item?.discountPrice * item?.quantity}/-PKR
+                        {item?.price * item?.quantity}/-PKR
                       </td>
                       <td className="align-middle">
                         <button
                           className="btn btn-sm btn-danger"
-                          onClick={() => RemoveFromCart(item._id)}
+                          onClick={() => RemoveFromCart(item.productId)}
                         >
                           <i className="fa fa-times"></i>
                         </button>

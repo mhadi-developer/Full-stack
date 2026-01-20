@@ -14,6 +14,9 @@ const cartSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
+        image: {
+          secure_url: String,
+        },
         title: String,
         price: Number,
         quantity: {

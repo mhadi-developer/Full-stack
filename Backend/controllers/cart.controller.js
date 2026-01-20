@@ -12,6 +12,7 @@ export const addProductToCart = async (req, res, next) => {
       title: body.title,
       price: body.discountPrice,
       quantity: body.quantity || 1,
+      image: body.mainImage
     };
 
     // Get or create cart safely
@@ -19,8 +20,12 @@ export const addProductToCart = async (req, res, next) => {
 
     // Check if product already exists in cart
     const item = cart.items.find(
-      (i) => i.productId.toString() === product.productId
+      (item) => item.productId.toString() === product.productId.toString()
     );
+
+
+    console.log("found item on product id in Add to cart ---->", item);
+    
 
     if (item) {
       item.quantity += product.quantity;
@@ -75,7 +80,6 @@ const getUserCart = async (userId) => {
 export const getAllCartItemsByUser = async (req, res, next) => { 
     
     const { userId } = req.params;
-    console.log("--------------- userId", userId);
     
 
     try {
@@ -84,8 +88,6 @@ export const getAllCartItemsByUser = async (req, res, next) => {
 
 
 
-
-        console.log("********************",cartItems);
         
         res.status(200).json({
             success: true,
@@ -128,29 +130,61 @@ export const getSingleItemFromCart = async(req, res, next) => {
 
 
 
+ export const incrementCartProductQuntity = async (req, res) => {
+   try {
+    
+     const { userId } = req.params;
+     const { productId } = req.body;
 
-export const updateItemById = async(req, res, next) => {
-    try {
-      
-        const { id, type } = req.params;
+     // geting the user cart from user defined function
+ 
+     const cart = await getUserCart(userId);
+     const item = cart.items.find(i => i.productId.toString() === productId);
 
-        if (!id || !type) return;
-        
-        if (type == "INCREMENT") {
-            
-        } else if (type == "DECREMENT") {
-            
-        } else {
-            return;
-        }
+     if (item) {
+       item.quantity += 1;
+     }
 
+     await cart.save();
 
+     res.status(200).json(cart);
 
-    } catch (error) {
-        res.json({
-            success: false,
-            message: error?.message || "cannot update the item"
-        })
+  } catch (error) {
+    
+     res.status(500).json({error: error.message});
+  } 
+}
+
+// ******************************
+
+export const decrementCartProductQuntity = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { productId } = req.body;
+
+    const id = productId.productId; // string from frontend
+
+    const cart = await getUserCart(userId);
+    console.log("----->", cart);
+
+    const item = cart.items.find((i) => i.productId.equals(id));
+
+    console.log("item with decrease id", item);
+
+    if (item) {
+      item.quantity -= 1;
+
+      if (item.quantity === 0) {
+        cart.items = cart.items.filter((i) => !i.productId.equals(id));
+      }
+    }
+
+    await cart.save();
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({
+      error: error?.message || "something went wrong",
+    });
   }
 };
 
@@ -158,17 +192,48 @@ export const updateItemById = async(req, res, next) => {
 //-----------------------------------------------------------------------------------------
 
 
-export const deleteItemById = async(req, res, next) => {
+export const removeItemFromCart = async (req, res, next) => {
+
+  // for removing item ,, UseriD in params and productId in body
+  const { userId } = req.params;
     try {
-        const { id } = req.params;
-        const cartItem = await cartModal.findByIdAndDelete(id);
+     
+      const { productId } = req.body;
+     
+      console.log("************ removeItem from cart");
+    
+
+      let cart = await getUserCart(userId);
+
+      
+      if (!cart) {
+        res.status(404).json({
+          message:"not founded , plaese add product"
+        })
+      }
+      console.log("item productId", cart.items);
+     
+
+     cart.items = cart.items.filter(
+       (item) => item.productId.toString() !== productId.toString(),
+     );
+
+      
+      console.log("cart after removing item----> ",cart.items );
+      
+      
+      await cart.save();
 
         res.status(201).json({
             success: true,
-            message:"item removed successfully"
+          message: "item removed successfully",
+            data:cart
         })
     } catch (error) {
-        
+      res.json({
+        success: false,
+        message: error
+        })
   }
 };
 
@@ -177,8 +242,24 @@ export const deleteItemById = async(req, res, next) => {
 
 export const clearCart = async(req, res, next) => {
     try {
-        
+          
+      const { userId } = req.params;
+
+      const cart = await getUserCart(userId);
+
+      cart.items = [];
+
+      await cart.save();
+      
+      res.status(200).json({
+        success: true,
+        message: `cart item removed of user:${userId}`
+      })
+
     } catch (error) {
-        
+      res.status(500).json({
+        success: false,
+        message: error.message || "something went wrong"
+        })
     }
 }

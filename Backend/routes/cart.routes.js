@@ -3,9 +3,11 @@ const app = express();
 import {
   addProductToCart,
   getAllCartItemsByUser,
-  updateItemById,
-  deleteItemById,
+  incrementCartProductQuntity,
+decrementCartProductQuntity,
+  removeItemFromCart,
   getSingleItemFromCart,
+  clearCart
 } from "../controllers/cart.controller.js";
 const router = express.Router()
 
@@ -14,8 +16,10 @@ const router = express.Router()
 router.route("/cart/add/:userId").post(addProductToCart);
 router.route("/cart/items/:userId").get(getAllCartItemsByUser);
 router.route("/cart/item/:id").get(getSingleItemFromCart);
-router.route("/cart/update/:id/:type").put(updateItemById);
-router.route("/cart/delete/:id").delete(deleteItemById);
+router.route("/cart/item/increment/:userId").post(incrementCartProductQuntity);
+router.route("/cart/item/decrement/:userId").post(decrementCartProductQuntity);
+router.route("/cart/items/clear/:userId").delete(clearCart);
+router.route("/cart/delete/:userId").delete(removeItemFromCart);
 
 
 

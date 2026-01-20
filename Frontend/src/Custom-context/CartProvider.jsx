@@ -17,43 +17,46 @@ const cartReducer = (state, action) => {
 
     case "SET_CART": {
       const newState = action.payload;
+      console.log(' SETcART action >>>>>', newState);
+      
       return newState;
      }
 
 
 
       case "ADD_TO_CART": {
-          action.payload.quantity = 1;
+       
           const cartItem = action.payload;
          
       console.log("Previous State:", state);
       console.log("Add to cart:", cartItem);
 
-      //   return [...state, cartItem];
       
-      // checking if same item is already  added to cart , if it exist increase its quantity only ;
-      const existingItem = state.find(item => item._id == cartItem._id);
-      // add product in DB
 
-
-// adding product in global context state/memory
+      const existingItem = state.find(item => item.productId === cartItem.productId);
       if (existingItem) {
-       state.map((item) => {
-          return item._id == cartItem._id ?
-            { ...item, quantity: item.quantity + 1 } : item;
-        }
+        // itemexisted then increase qunty
+        return state.map(item =>
+          item.productId == action.payload.productId ? 
+            { ...item, quantity: item.quantity + 1 } :
+            item
         )
       }
       else {
-        const newState = [...state, { ...cartItem , quantity:1}];
-        return newState;
-      }  
+        // if item is not existed add with quantity 1
+        return [...state, {...action.payload,quantity:1}]
+      }
+
+     
+      // add product in DB
+
+    
     }
 
     case "REMOVE_FROM_CART": {
       const _id = action.payload;
 
-          const newState = state.filter((item) => item._id !== _id);
+          const newState = state.filter((item) => item.productId.toString() !== _id.toString());
           return newState;
     }
 
@@ -62,22 +65,26 @@ const cartReducer = (state, action) => {
     }
 
     case "INCREMENT_CART": {
-      const id = action.payload._id;
+      const id = action.payload;
+      
 
       const newState = state.map((item) =>
-        item._id === id ? { ...item, quantity: item.quantity + 1 } : item
-          );
+        item.productId.toString() === id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item,
+      );
 
-          console.log("increaSed qynty............", newState);
+
+      console.log("increaSed qynty............", newState);
           
           return newState;
     }
 
     case "DECREMENT_CART": {
-      const id = action.payload._id;
+      const id = action.payload.productId;
 
       const newState = state.map((item) =>
-        item._id === id && item.quantity > -1
+        item.productId === id && item.quantity > -1
           ? { ...item, quantity: item.quantity - 1 }
           : item
           );
@@ -112,8 +119,6 @@ const CartProvider = ({ children }) => {
   const { loggedInUserData } = useAuth();
   
   console.log("---------------Cart Provider", loggedInUserData);
-  console.log("-----------", loggedInUserData?.fullName);
-  console.log("----------------------", loggedInUserData?._id);
 
 
 
@@ -126,13 +131,16 @@ const CartProvider = ({ children }) => {
    try {
    
       if (!userId) return;
-
-      const res = await fetch(`http://localhost:7000/cart/items/${userId}`);
-
-     const { data } = await res.json();
-     console.log("response from the Backend fetched cart of user",data);
+const res = await fetch(`http://localhost:7000/cart/items/${loggedInUserData._id}`);
+     const {data} = await res.json();
      
-      dispatch({ type: "SET_CART", payload: data?.items || [] });
+
+     //----------------- Set cart ---------------------
+
+dispatch({
+  type: "SET_CART",
+  payload: data || []
+});;
     }
     catch (error) {
      console.log("error fetching cart items", error);
@@ -140,7 +148,7 @@ const CartProvider = ({ children }) => {
  };
 
   
-  // Add to cart operation....
+  //-------------------------------------- Add to cart operation....--------------------------
   const AddToCart = async (product) => {
     try {
       // Update local state
@@ -152,9 +160,7 @@ const CartProvider = ({ children }) => {
         return;
       }
 
-      console.log(product);
-      const newProduct =  { ...product, quantity: 1 };
-      console.log(">>>>>>>>>>>>>>>>>>",newProduct);
+      
       
       // Make POST request
       const response = await fetch(
@@ -165,7 +171,7 @@ const CartProvider = ({ children }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newProduct), // FIXED: JSON.stringify (capital J)
+          body: JSON.stringify(product), // FIXED: JSON.stringify (capital J)
         }
       );
 
@@ -182,15 +188,96 @@ const CartProvider = ({ children }) => {
     }
   };
 
-  const RemoveFromCart = (_id) =>
-    dispatch({ type: "REMOVE_FROM_CART", payload: _id });
-  const ClearCart = () => dispatch({ type: "CLEAR_CART" });
-  const IncreamentCart = (productId) =>
+
+  //----------------- Remove from cart operation ---------------------------------
+  const RemoveFromCart = async (_id) => {
+    try {
+    console.log(_id);
+    
+      const res = await fetch(
+        `http://localhost:7000/cart/delete/${loggedInUserData._id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ productId: _id }),
+        },
+      );
+
+      const { data } =   await res.json();
+      console.log("remove item from cart response ------>", data);
+
+      dispatch({ type: "REMOVE_FROM_CART", payload: _id });
+  } catch (error) {
+    console.log("remove item from cart error---->", error);
+    
+  }
+  }
+
+
+// ----------------------------{CLEAR CART }----------------------------------------
+  const ClearCart = async () => {
+
+  
+    dispatch({ type: "CLEAR_CART" })
+
+    const res = await fetch(`http://localhost:7000/cart/items/clear/${loggedInUserData._id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+    
+    const response = await res.json();
+
+    console.log("clear cart endpoint response------->", response);
+    
+  };
+
+
+  //------------------------ Updating product quantity in cart operations ------------------------------
+
+  const IncreamentCart = async (productId) => {
     dispatch({ type: "INCREMENT_CART", payload: productId });
-  const DecrementCart = (productId) =>
+    const res = await fetch(
+      `http://localhost:7000/cart/item/increment/${loggedInUserData._id}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId }),
+      },
+    );
+
+    const response = await res.json();
+    console.log("increment cart endpoint responso --->", response);
+    
+  }
+   
+  const DecrementCart = async (productId) => {
     dispatch({ type: "DECREMENT_CART", payload: productId });
+     const res = await fetch(
+       `http://localhost:7000/cart/item/decrement/${loggedInUserData._id}`,
+       {
+         method: "POST",
+         credentials: "include",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ productId }),
+       },
+     );
 
+    const response = await res.json();
+    console.log("Decrease quantity endpoint response ------->", response,);
+    
 
+  }
 
 
   // load the cart on first render

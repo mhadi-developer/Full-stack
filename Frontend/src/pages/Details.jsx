@@ -17,7 +17,10 @@ const Details = () => {
       const res = await fetch(`http://localhost:7000/product/${slug}`);
       const data = await res.json();
 
-      console.log(data.product[0]);
+      console.log('detail page', data.product[0]);
+      console.log("detailPage Id", data.product[0]._id);
+      const id = data.product[0]._id;
+      
       
       setProduct(data.product[0]);
       
@@ -27,7 +30,11 @@ const Details = () => {
   },[])
   
  
-  const productQuantity=cartState.map((item)=>item.quantity)
+ 
+  console.log('detailpage', cartState);
+  const quantity =
+  cartState?.find(item => item.productId === product._id)?.quantity ?? "";
+  
 
     
   return (
@@ -143,8 +150,8 @@ const Details = () => {
                   <input
                     type="text"
                     className="form-control border-0 text-center"
-                    value={productQuantity}
                     readOnly
+                    value={quantity}
                   />
                   <div className="input-group-btn">
                     <button

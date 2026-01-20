@@ -150,7 +150,7 @@ function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id
                 className="btn btn-outline-dark btn-square"
                 onClick={() => AddToCart(productData)}
                 disabled={
-                  cartState.find((item) => item._id == _id) ? true : false
+                  cartState.find((item) => item.productId == _id) ? true : false
                 }
               >
                 <i className="fa fa-shopping-cart"></i>
