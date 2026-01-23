@@ -51,7 +51,7 @@ export default function AddProductForm() {
   const price = watch("price");
   const discount = watch("discount");
   const discountPrice =
-    price && discount ? price - (price * discount) / 100 : price;
+    price && discount ? (price * discount) / 100 : price;
 
   /* -------------------- SUBMIT -------------------- */
   const onSubmit = async (data) => {
@@ -227,6 +227,7 @@ export default function AddProductForm() {
               { label: "S", value: "S" },
               { label: "M", value: "M" },
               { label: "L", value: "L" },
+              { label: "XL", value: "XL" },
             ]}
             value={watch("sizes")}
             onChange={(v) => setValue("sizes", v, { shouldValidate: true })}
@@ -239,6 +240,10 @@ export default function AddProductForm() {
             options={[
               { label: "Black", value: "black" },
               { label: "White", value: "white" },
+              { label: "Red", value: "red" },
+              { label: "Blue", value: "blue" },
+              { label: "Green", value: "green" },
+              { label: "Pink", value: "pink" },
             ]}
             value={watch("colors")}
             onChange={(v) => setValue("colors", v, { shouldValidate: true })}
@@ -344,7 +349,7 @@ export default function AddProductForm() {
                     onClick={() => {
                       URL.revokeObjectURL(img.url);
                       setGalleryImages((prev) =>
-                        prev.filter((i) => i.id !== img.id)
+                        prev.filter((i) => i.id !== img.id),
                       );
                     }}
                   >
@@ -356,8 +361,8 @@ export default function AddProductForm() {
           )}
         </div>
 
-        <button className="btn btn-primary w-100" disabled={isSubmitted}>
-          {isSubmitted ? "Submitting..." : "Add Product"}
+        <button className="btn btn-primary w-100" disabled={submitLoading}>
+          {submitLoading ? "Submitting..." : "Add Product"}
         </button>
       </form>
 
