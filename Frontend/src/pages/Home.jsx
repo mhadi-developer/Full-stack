@@ -8,17 +8,18 @@ import FeatureProducts from '../components/FeatureProducts'
 import SpecialOffer from '../components/SpecialOffer'
 import RecentProducts from '../components/RecentProducts'
 import { useFetch } from '../customHooks/useFetch'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 
 const Home = ({ categories }) => {
-  
-  const {data:products , error , loading } = useFetch('http://localhost:7000/products')
+ 
   return (
     <div>
       <Carousel />
       <Features />
       <Categories categories={categories} />
-      <FeatureProducts products ={products} />
+      <FeatureProducts  />
       <SpecialOffer />
       <RecentProducts />
     </div>

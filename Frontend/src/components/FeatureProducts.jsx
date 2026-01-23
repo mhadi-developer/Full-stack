@@ -74,6 +74,7 @@ import { useCart } from "../Custom-context/CartProvider";
 import { Link } from "react-router";
 import { useAuth } from "../Custom-context/AuthProvider";
 import { useNavigate } from "react-router";
+import InfiniteScroll from "react-infinite-scroll-component";
 // Reusable card component
 function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id }) {
   const { cartState,AddToCart} = useCart();
@@ -198,8 +199,35 @@ function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id
 }
 
 // Main section
-export default function FeatureProducts({products}) {
+export default function FeatureProducts() {
 
+   const [products, setProducts] = useState([]);
+   const [page, setPage] = useState(1);
+   const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(4);
+  
+  const fetchProducts = async () => {
+     
+    const res = await fetch(`http://localhost:7000/products?page=${page}&limit=${limit}`);
+    const data =  await res.json();
+   
+    console.log("backend products --->", data);
+    
+  
+    
+    
+  setProducts((prev) => [...prev, ...data?.products]);
+  setHasMore(data.hasMore);
+  setPage((prev) => prev + 1);
+
+   
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  },[page])
+  
 
   return (
     <section className="container-fluid pt-5 pb-3">
@@ -207,11 +235,23 @@ export default function FeatureProducts({products}) {
         <span className="bg-secondary pr-3">Featured Products</span>
       </h2>
 
-      <div className="row px-xl-5">
-        {products?.map((product) => (
-          <ProductCard key={product._id} {...product} />
-        ))}
-      </div>
+      <InfiniteScroll
+        dataLength={products.length}
+        next={fetchProducts}
+        hasMore={hasMore}
+        loader={<h4>Loading products...</h4>}
+        endMessage={
+          <p  className='infinite-scroll-end-text' style={{ textAlign: "center", marginTop: "1rem" }}>
+            No more products
+          </p>
+        }
+      >
+        <div className="row px-xl-5">
+          {products.map((product) => (
+            <ProductCard key={product._id} {...product} />
+          ))}
+        </div>
+      </InfiniteScroll>
     </section>
   );
 }

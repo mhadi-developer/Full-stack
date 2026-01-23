@@ -1,6 +1,7 @@
 import ProductModal from "../Modals/Product-modal/product-modal.js";
 import multer from "multer";
 import path from "path";
+import productModal from "../Modals/Product-modal/product-modal.js";
 
 
 
@@ -9,8 +10,33 @@ import path from "path";
 
 
 export const getAllProducts = async (req, res) => {
-  const products = await ProductModal.find({});
-  res.json(products);
+  try {
+
+    // page and limit in query from client side (default 1 , 10)
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // fetching all products with pagination
+
+    const products = await productModal.find({}).skip(skip).limit(limit);
+
+    // total products/ documents in DB
+
+    const totalProducts = await productModal.countDocuments();
+
+    res.status(200).json({
+      products,
+      hasMore: skip + products.lenght < totalProducts,
+      currentPage: page
+    });
+
+  } catch (error) {
+    
+    res.status(500).json({
+      message: error.message || " failed to fetch products"
+    })
+  }
 }; // fetch all products from database
 
 export const getProductsById = async (req, res) => {

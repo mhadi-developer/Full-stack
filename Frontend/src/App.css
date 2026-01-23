@@ -148,3 +148,14 @@ transition: .5s ease;
     background-color: #3D464D !important;
     color:#e9d69f !important;
 }
+
+.infinite-scroll-component{
+    overflow: hidden !important;
+    overflow-y: auto !important;
+}
+.infinite-scroll-end-text{
+    font-size: 30px !important;
+    color: #3D464D;
+    font-weight: 600 !important;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}

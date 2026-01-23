@@ -88,10 +88,11 @@ const productSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      index:true,
     },
   },
   {
-    timestamps: true, // adds createdAt and updatedAt automatically
+    timestamps: true ,// adds createdAt and updatedAt automatically
   }
 );
 
