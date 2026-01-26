@@ -105,7 +105,7 @@ function App() {
               element={<ConfirmedOrderDetails />}
             />
 
-            <Route path="/products/:slug" element={<Details />} />
+            <Route path="/product/detail/:slug" element={<Details />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/signin" element={<SignInForm />} />
             <Route

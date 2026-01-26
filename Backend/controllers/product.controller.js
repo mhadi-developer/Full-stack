@@ -61,10 +61,14 @@ export const getProductsById = async (req, res) => {
    GET PRODUCT BY SLUG
    Fetch a single product using slug
 ========================================================= */
-export const getProductsBySlug = async (req, res) => {
+export const getProductBySlug = async (req, res) => {
   const { slug } = req.params;
+  console.log("slug-->", slug);
+  
 
-  const product = await ProductModal.find({ slug });
+  const product = await ProductModal.find({slug:slug});
+  console.log("product finded by slug ->", product);
+  
 
   res.json({
     message: "single product endpoint called",

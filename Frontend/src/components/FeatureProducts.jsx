@@ -178,7 +178,7 @@ function ProductCard({ mainImage, title, price, discountPrice, stars, slug , _id
         </div>
 
         <div className="text-center py-4">
-          <Link to={`/products/${slug}`} className="h6 text-decoration-none">
+          <Link to={`/product/detail/${slug}`} className="h6 text-decoration-none">
             {title}
           </Link>
 

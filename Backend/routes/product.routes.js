@@ -5,6 +5,7 @@ import {
   deleteProduct,
   createProduct,
   getProductsByCategory,
+  getProductBySlug,
 } from "../controllers/product.controller.js";
 import { upload } from '../utilities/multer.js';
 import { isAuthenticated } from '../Middleware/auth.middleware.js';
@@ -20,6 +21,8 @@ router.route("/products/add").post(
   createProduct
 );
 router.route("/products").get(getAllProducts);
+router.route("/product/detail/:slug").get(getProductBySlug);
+
 
 router.route("/product/:cat_id").get(getProductsByCategory);
 router.route("/product/update/:id").put(isAuthenticated, updateProduct);

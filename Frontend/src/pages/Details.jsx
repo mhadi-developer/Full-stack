@@ -14,12 +14,13 @@ const Details = () => {
 
   useEffect( () => {
     const getProductbySlug = async () => {
-      const res = await fetch(`http://localhost:7000/product/${slug}`);
+      const res = await fetch(`http://localhost:7000/product/detail/${slug}`);
       const data = await res.json();
+      console.log("=====>",data);
+      
 
-      console.log('detail page', data.product[0]);
-      console.log("detailPage Id", data.product[0]._id);
-      const id = data.product[0]._id;
+      
+      // const id = data.product[0]._id;
       
       
       setProduct(data.product[0]);
