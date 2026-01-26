@@ -208,20 +208,17 @@ export default function FeatureProducts() {
   const [limit, setLimit] = useState(4);
   
   const fetchProducts = async () => {
-     
-    const res = await fetch(`http://localhost:7000/products?page=${page}&limit=${limit}`);
-    const data =  await res.json();
-   
-    console.log("backend products --->", data);
-    
-  
-    
-    
-  setProducts((prev) => [...prev, ...data?.products]);
-  setHasMore(data.hasMore);
-  setPage((prev) => prev + 1);
+    if (hasMore) {
 
-   
+      const res = await fetch(
+        `http://localhost:7000/products?page=${page}&limit=${limit}`,
+      );
+      const data = await res.json();
+
+      setProducts((prev) => [...prev, ...data.products]);
+      setHasMore(data.hasMore);
+      setPage((prev) => prev + 1);
+    };
   }
 
   useEffect(() => {
@@ -241,7 +238,10 @@ export default function FeatureProducts() {
         hasMore={hasMore}
         loader={<h4>Loading products...</h4>}
         endMessage={
-          <p  className='infinite-scroll-end-text' style={{ textAlign: "center", marginTop: "1rem" }}>
+          <p
+            className="infinite-scroll-end-text"
+            style={{ textAlign: "center", marginTop: "1rem" }}
+          >
             No more products
           </p>
         }

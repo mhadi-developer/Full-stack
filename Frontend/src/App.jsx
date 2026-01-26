@@ -23,6 +23,7 @@ import Checkout from './pages/Checkout.jsx';
 import PaymentSuccess from './pages/PaymentSuccsess.jsx';
 import PaymentCancellation from './pages/PaymentCancel.jsx';
 import ConfirmedOrderDetails from './pages/ConfirmOrderDetails.jsx';
+import Shope from './pages/Shope.jsx';
 
 
 // Create Cart Context
@@ -97,6 +98,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/cancel" element={<PaymentCancellation />} />
+            <Route path="/shop/:cat_id" element={<Shope/>} />
 
             <Route
               path="/order/confirm/detail"

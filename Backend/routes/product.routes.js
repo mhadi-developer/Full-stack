@@ -1,5 +1,11 @@
 import express from 'express'
-import { getAllProducts,getProductsBySlug,updateProduct,deleteProduct,createProduct } from '../controllers/product.controller.js';
+import {
+  getAllProducts,
+  updateProduct,
+  deleteProduct,
+  createProduct,
+  getProductsByCategory,
+} from "../controllers/product.controller.js";
 import { upload } from '../utilities/multer.js';
 import { isAuthenticated } from '../Middleware/auth.middleware.js';
 const app = express();
@@ -14,7 +20,8 @@ router.route("/products/add").post(
   createProduct
 );
 router.route("/products").get(getAllProducts);
-router.route("/product/:slug").get( getProductsBySlug);
+
+router.route("/product/:cat_id").get(getProductsByCategory);
 router.route("/product/update/:id").put(isAuthenticated, updateProduct);
 router.route("/product/delete/:id").delete(isAuthenticated, deleteProduct);
 

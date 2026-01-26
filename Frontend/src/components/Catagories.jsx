@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+import { Link } from "react-router";
+
 export default function Categories({ categories }) {
   
   console.log(" *******Recieved Categories from Backend ", categories);
@@ -13,7 +15,7 @@ export default function Categories({ categories }) {
       <div className="row px-xl-5 pb-3">
         {categories?.map((cat, index) => (
           <div className="col-lg-3 col-md-4 col-sm-6 pb-1" key={index}>
-            <a className="text-decoration-none" href="#">
+            <Link className="text-decoration-none" to={`/shop/${cat._id}`}>
               <div className="cat-item img-zoom d-flex align-items-center mb-4">
                 <div
                   className="overflow-hidden"
@@ -36,7 +38,7 @@ export default function Categories({ categories }) {
                   <small className="text-body">{cat.title}</small>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
         ))}
       </div>
