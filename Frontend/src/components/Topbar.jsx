@@ -22,7 +22,7 @@ const Topbar = () => {
     e.preventDefault();
 
     if (!searchProduct) return;
-    navigate('/searchProduct/')
+    navigate(`/shop/?searchProduct=${searchProduct}`)
 
       
   }

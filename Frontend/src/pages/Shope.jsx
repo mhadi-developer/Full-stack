@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { useFetch } from "../customHooks/useFetch";
 import { useAuth } from "../Custom-context/AuthProvider";
 import { useNavigate } from "react-router";
@@ -7,7 +7,9 @@ import { useCart } from "../Custom-context/CartProvider";
 import { Link } from "react-router";
 
 const Shope = () => {
-  const { cat_id } = useParams();
+  const [searchParam] = useSearchParams(); // recieving query string
+  const searchProduct = searchParam.get("searchProduct");
+  const categoryId = searchParam.get("categoryId");
   const [category, setCategory] = useState();
   const [products, setProducts] = useState([]);
   const { loggedInUserData } = useAuth();
@@ -17,6 +19,11 @@ const Shope = () => {
     navigate("/signin");
   };
 
+
+  const cat_id = categoryId
+  console.log("categoryid", categoryId);
+  
+
   // Fetch category name
   const fetchCategory = async () => {
     const res = await fetch(`http://localhost:7000/category/${cat_id}`);
@@ -25,16 +32,27 @@ const Shope = () => {
   };
 
   // Use custom hook to fetch products
-  const { data, error, loading } = useFetch(
-    `http://localhost:7000/product/${cat_id}`,
-  );
+  const fetchProductByCategory = async () => {
+    try {
+       const res = await fetch(
+         `http://localhost:7000/products?categoryId=${categoryId}&searchProduct=${searchProduct}`,
+       );
 
+       const data = await res.json();
+       setProducts(data);
+    } catch (error) {
+      console.log(error);
+       
+    }
+   
+  }
   // Update products state whenever `data` changes
   useEffect(() => {
-    if (data) {
-      setProducts(data);
+    if (cat_id) {
+      fetchProductByCategory();
     }
-  }, [data]);
+     
+  }, [categoryId , searchProduct]);
 
   // Fetch category only once on mount or when `cat_id` changes
   useEffect(() => {
@@ -42,6 +60,7 @@ const Shope = () => {
       fetchCategory();
     }
   }, [cat_id]);
+
   console.log("___________>", products);
 
   const StarRating = ({ value = 0, max = 5 }) => {
@@ -50,6 +69,8 @@ const Shope = () => {
     const empty = max - full - (half ? 1 : 0);
   }
   
+  console.log("searchProduct", searchProduct);
+  
 
   return (
     <div>
@@ -57,13 +78,11 @@ const Shope = () => {
         <span className="bg-secondary pr-3">{category?.data?.title}</span>
       </h2>
 
-      {loading && <p>Loading products...</p>}
-      {error && <p>Error loading products: {error}</p>}
 
       <div className="products-container">
         
           <div className="row px-xl-5">
-            {products?.data?.map((product) => (
+            {products?.products?.map((product) => (
               <div className="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div className="product-item bg-light mb-4">
                   <div className="product-img position-relative overflow-hidden">

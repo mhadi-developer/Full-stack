@@ -24,7 +24,6 @@ router.route("/products").get(getAllProducts);
 router.route("/product/detail/:slug").get(getProductBySlug);
 
 
-router.route("/product/:cat_id").get(getProductsByCategory);
 router.route("/product/update/:id").put(isAuthenticated, updateProduct);
 router.route("/product/delete/:id").delete(isAuthenticated, deleteProduct);
 

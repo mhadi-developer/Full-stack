@@ -15,7 +15,7 @@ export default function Categories({ categories }) {
       <div className="row px-xl-5 pb-3">
         {categories?.map((cat, index) => (
           <div className="col-lg-3 col-md-4 col-sm-6 pb-1" key={index}>
-            <Link className="text-decoration-none" to={`/shop/${cat._id}`}>
+            <Link className="text-decoration-none" to={`/shop?categoryId=${cat._id}`}>
               <div className="cat-item img-zoom d-flex align-items-center mb-4">
                 <div
                   className="overflow-hidden"

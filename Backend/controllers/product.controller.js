@@ -8,6 +8,7 @@ import ProductModal from "../Modals/Product-modal/product-modal.js";
 import multer from "multer";
 import path from "path";
 import productModal from "../Modals/Product-modal/product-modal.js";
+import mongoose from "mongoose";
 
 /* =========================================================
    GET ALL PRODUCTS
@@ -15,32 +16,126 @@ import productModal from "../Modals/Product-modal/product-modal.js";
 ========================================================= */
 export const getAllProducts = async (req, res) => {
   try {
-    // Page and limit from query params (default: page 1, limit 10)
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    /* =========================================================
+       1. REQUEST DESTRUCTURING
+       - params   → resource identification (category)
+       - query    → pagination, search, filters, sorting
+    ========================================================= */
 
-    // Fetch products with pagination
-    const products = await productModal.find({}).skip(skip).limit(limit);
-    console.log("products---------->",products);
+    // URL param (e.g. /products/:categoryId)
+    // const { categoryId } = req.params;
+
+    // Query string (e.g. ?page=1&limit=10&search=iphone)
+    const {
+      categoryId,
+      searchProduct,                     // keyword search
+      page = 1,                   // current page (default: 1)
+      limit = 10,                 // items per page (default: 10)
+      sortBy = "createdAt",       // sort field (default: latest)
+      order = "desc",             // sort order (asc | desc)
+      ...filters                  // dynamic filters (price, brand, etc.)
+    } = req.query;
+
+    /* =========================================================
+       2. PAGINATION CALCULATION
+    ========================================================= */
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    /* =========================================================
+       3. BUILDING MONGODB QUERY OBJECT
+    ========================================================= */
+
+    let queryObject = {};
+
+    // 3.1 Category filtering (URL param)
+    console.log("category", categoryId);
+    console.log("searchStatement", searchProduct);
     
-    console.log("produvts lenght ---->", products.length);
+   if (categoryId && categoryId !== "null" && categoryId !== "undefined") {
+  queryObject.category =  categoryId;
+}; // string
+
+    // 3.2 Search (case-insensitive on title & description)
+   if (searchProduct && searchProduct.trim() !== "" && searchProduct !== "null") {
+     queryObject.$or = [
+       { title: { $regex: searchProduct.trim(), $options: "i" } },
+       { description: { $regex: searchProduct.trim(), $options: "i" } },
+     ];
+   }
+    // 3.3 Dynamic filtering (price, brand, rating, etc.)
+    // Reserved keys must not be treated as DB filters
+    const reserved = [
+      "page",
+      "limit",
+      "sortBy",
+      "order",
+      "searchProduct",
+      "categoryId",
+    ];
+
+    Object.keys(filters).forEach((key) => {
+      if (!reserved.includes(key)) {
+        queryObject[key] = filters[key];
+      }
+    });
+
+    /* =========================================================
+       4. SORTING LOGIC
+    ========================================================= */
+
+    const sortOrder = order === "asc" ? 1 : -1;
+    const sortOperation = { [sortBy]: sortOrder };
+
+
+
+
+    
+    /* =========================================================
+       5. DATABASE QUERY
+       - filtered
+       - sorted
+       - paginated
+    ========================================================= */
+
+    console.log("Final queryObject:", queryObject);
+
+    const products = await productModal
+      .find( queryObject )
+      .skip(skip)
+      .limit(limitNum)
+      .sort(sortOperation);
+    console.log('product----->',products);
     
 
-    // Total products count
-    const totalProducts = await productModal.countDocuments();
+    const totalProduct = await productModal.countDocuments(queryObject);
+
+    console.log({
+      products,
+      totalProduct
+    });
+    
+
+    /* =========================================================
+       6. RESPONSE
+    ========================================================= */
 
     res.status(200).json({
-      products,
-      hasMore: skip+products.length < totalProducts,
-      currentPage: page,
+      products,                          // current page products
+      total: totalProduct,               // total matching products
+      page: pageNum,                     // current page number
+      pages: Math.ceil(totalProduct / limitNum), // total pages
+      hasMore: pageNum * limitNum < totalProduct // pagination helper
     });
+
   } catch (error) {
     res.status(500).json({
       message: error.message || "failed to fetch products",
     });
   }
-}; // fetch all products from database
+}; // Fetch products with search, filters, sorting & pagination
 
 /* =========================================================
    GET PRODUCT BY ID
@@ -55,7 +150,7 @@ export const getProductsById = async (req, res) => {
     message: "single product endpoint called",
     product,
   });
-}; // fetch single product by id from database
+}; 
 
 /* =========================================================
    GET PRODUCT BY SLUG
@@ -63,11 +158,11 @@ export const getProductsById = async (req, res) => {
 ========================================================= */
 export const getProductBySlug = async (req, res) => {
   const { slug } = req.params;
-  console.log("slug-->", slug);
+  
   
 
-  const product = await ProductModal.find({slug:slug});
-  console.log("product finded by slug ->", product);
+  const product = await ProductModal.find({slug});
+
   
 
   res.json({

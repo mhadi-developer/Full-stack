@@ -98,7 +98,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/cancel" element={<PaymentCancellation />} />
-            <Route path="/shop/:cat_id" element={<Shope/>} />
+            <Route path="/shop/:cat_id?" element={<Shope/>} />
 
             <Route
               path="/order/confirm/detail"

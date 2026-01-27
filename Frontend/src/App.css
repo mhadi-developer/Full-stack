@@ -55,10 +55,11 @@ background-blend-mode:hue;
     color:#FFD333 !important;
     padding: 5px 10px;
 }
-.input-group-append span.input-group-text:hover{
-    background-color:#3D464D !important;
-    color:#FFD333 !important;
+.input-group-append button.input-group-text:hover{
+    background-color:#FFD333 !important;
+    color:#3D464D !important;
     transition: .3s ease;
+    border-color: #e9d69f !important;
 }
 div a.text-dark:hover{
 color: #ffd333 !important;

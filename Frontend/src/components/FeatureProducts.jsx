@@ -214,8 +214,10 @@ export default function FeatureProducts() {
         `http://localhost:7000/products?page=${page}&limit=${limit}`,
       );
       const data = await res.json();
+      console.log("======",data);
+      
 
-      setProducts((prev) => [...prev, ...data.products]);
+      setProducts((prev) => [...prev, ...data?.products]);
       setHasMore(data.hasMore);
       setPage((prev) => prev + 1);
     };
@@ -223,7 +225,7 @@ export default function FeatureProducts() {
 
   useEffect(() => {
     fetchProducts();
-  },[page])
+  },[])
   
 
   return (
