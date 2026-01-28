@@ -9,9 +9,11 @@ import cartRoutes from "./routes/cart.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
+import http from 'node:http'
+import {Server} from "socket.io"
+
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 // ✅ List of allowed origins
 
@@ -21,6 +23,18 @@ const allowedOrigins = [
   "http://localhost:5174",
 ,
 ];
+
+const server = http.createServer(app)
+const port = process.env.PORT || 5000;
+
+const io = new Server(server, {
+   cors:{
+    origin: allowedOrigins, // your frontend
+    credentials: true, // needed because your fetch uses credentials
+  }
+})
+
+
 
 app.use(
   cors({
@@ -40,7 +54,18 @@ app.use(categoryRoutes);
 app.use(userRoutes);
 app.use(paymentRoutes);
 app.use(orderRoutes);
-app.use(cartRoutes)
+app.use(cartRoutes);
+
+ // socket io server event 
+io.on('connection', (socket) => {
+
+
+
+  console.log("user joined through Admin", socket.id);
+  
+})
+
+
 
 // START SERVER
 const startServer = async () => {
@@ -48,7 +73,7 @@ const startServer = async () => {
     await connectDB();
     console.log("MongoDB connected");
 
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`Server running on port ${port}`);
     });
   } catch (err) {
