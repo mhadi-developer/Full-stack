@@ -59,9 +59,11 @@ app.use(cartRoutes);
  // socket io server event 
 io.on('connection', (socket) => {
 
+ console.log("user joined through Admin", socket.id);
 
+  io.emit("response", { message: "hello from the server" });
+   io.emit("serverName", { message: "hello from the  Hadi jserver" });
 
-  console.log("user joined through Admin", socket.id);
   
 })
 

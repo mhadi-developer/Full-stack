@@ -16,10 +16,13 @@ import { useEffect } from 'react';
 function App() {
   // io server response
   useEffect(() => {
-    socket.on('connected', (data) => {
+    socket.on('response', (data) => {
     console.log(data.message);
     
-  })
+    })
+    socket.on("serverName", (data) => {
+      console.log(data.message);
+    });
 },[])
  
   return (
