@@ -68,6 +68,8 @@ io.on('connection', (socket) => {
 })
 
 
+app.set('socket', io); // io accessable in wholw scope of the app....
+
 
 // START SERVER
 const startServer = async () => {

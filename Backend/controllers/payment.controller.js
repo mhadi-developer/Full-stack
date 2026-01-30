@@ -22,7 +22,7 @@ export const stripePayment = async (req, res, next) => {
     const { items } = req.body;
 
     console.log("frontend sended item to purchse******", items);
-    logger.info("Stripe payment initiated", { items });
+    console.info("Stripe payment initiated", { items });
 
     // Transform frontend items into Stripe line items
     const lineItems = items.map((item) => {
@@ -39,10 +39,10 @@ export const stripePayment = async (req, res, next) => {
     });
 
     console.log("&&&&&&&&&&&&&&&&&&&& lineitems", lineItems);
-    logger.debug("Stripe line items prepared", { lineItems });
+   console.log("Stripe line items prepared", { lineItems });
 
     console.log("**************** user id", req?.user?.id);
-    logger.info("Creating Stripe session for user", {
+    console.info("Creating Stripe session for user", {
       userId: req?.user?.id,
     });
 
@@ -57,14 +57,13 @@ export const stripePayment = async (req, res, next) => {
       client_reference_id: req?.user?.id,
     });
 
-    logger.info("Stripe checkout session created", {
+    console.log("Stripe checkout session created", {
       sessionId: session.id,
     });
 
     res.status(200).json({ url: session.url });
   } catch (error) {
-    console.log(error);
-    logger.error("Stripe payment error", { error });
+    console.log("Stripe payment error", { error });
 
     res.status(499).json({
       message: error?.message || "something went wrong",
@@ -80,10 +79,10 @@ export const confirmOrder = async (req, res, next) => {
   try {
     const { sessionId, userId } = req.body;
 
-    logger.info("Order confirmation started", { sessionId, userId });
+    console.info("Order confirmation started", { sessionId, userId });
 
     if (!sessionId || !userId) {
-      logger.warn("Missing sessionId or userId", { sessionId, userId });
+      console.log("Missing sessionId or userId", { sessionId, userId });
 
       return res.status(400).json({
         message: "sessionId and userId are required",
@@ -96,7 +95,7 @@ export const confirmOrder = async (req, res, next) => {
     });
 
     if (!session || session.payment_status !== "paid") {
-      logger.warn("Payment not completed", {
+      console.log("Payment not completed", {
         sessionId,
         status: session?.payment_status,
       });
@@ -109,7 +108,7 @@ export const confirmOrder = async (req, res, next) => {
     // 2️⃣ Transform Stripe session to order object
     const orderObject = transformCheckoutSessionToOrder(session, userId);
 
-    logger.debug("Order object transformed", { orderObject });
+   console.log("Order object transformed", { orderObject });
 
     // 3️⃣ Idempotent DB write
     const orderSavedDB = await orderModal.findOneAndUpdate(
@@ -120,8 +119,18 @@ export const confirmOrder = async (req, res, next) => {
         upsert: true,
       },
     );
+  
+    console.log("new order --->",orderSavedDB);
+    
+   
 
-    logger.info("Order saved successfully", {
+    const socket = req.app.get('socket');  // recieing io/socket global scope var
+
+   socket.emit("new-order", orderSavedDB);
+
+
+
+    console.info("Order saved successfully", {
       orderId: orderSavedDB?._id,
     });
 
@@ -131,8 +140,7 @@ export const confirmOrder = async (req, res, next) => {
       order: orderSavedDB,
     });
   } catch (error) {
-    console.error("Confirm order error:", error);
-    logger.error("Confirm order failed", { error });
+    console.log("Confirm order failed", { error });
 
     res.status(500).json({
       success: false,
@@ -153,7 +161,7 @@ export const getOrderById = async (req, res, next) => {
       "finding order by tracking id))))))))))))))))))))))=>",
       order_id,
     );
-    logger.info("Fetching order by ID", { orderId: order_id });
+    console.info("Fetching order by ID", { orderId: order_id });
 
     const trackingId = order_id;
 
@@ -163,11 +171,11 @@ export const getOrderById = async (req, res, next) => {
       "*************************************** tracked order =>",
       trackedOrder,
     );
-    logger.debug("Tracked order fetched", { trackedOrder });
+   console.log("Tracked order fetched", { trackedOrder });
 
     res.status(200).json(trackedOrder);
   } catch (err) {
-    logger.error("Get order by ID failed", { error: err });
+    console.log.error("Get order by ID failed", { error: err });
 
     res.json({
       message: err?.message || "something went wronng",
@@ -179,6 +187,6 @@ export const getOrderById = async (req, res, next) => {
  * ---------------------------------------------------------
  * LOGGING NOTES
  * - console.log preserved (dev visibility)
- * - logger used for structured logs (prod readiness)
+ * - console.log used for structured logs (prod readiness)
  * ---------------------------------------------------------
  */

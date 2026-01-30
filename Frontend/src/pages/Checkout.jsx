@@ -48,11 +48,14 @@ const Checkout = () => {
     "http://localhost:7000/users/update"
   );
   
+
+  console.log('test------------>', cartState);
+  
    
     const totalCartAmount = () => {
       let totalCartAmount = 0;
       cartState.forEach((item) => {
-        totalCartAmount += item?.discountPrice * item?.quantity;
+        totalCartAmount += item?.price * item?.quantity;
       });
       return totalCartAmount;
     };
@@ -72,7 +75,7 @@ const handleCheckoutPayment = async () => {
     const purchaseItem = cartState.map((item) => {
       return {
         title: item.title,
-        unitPrice: item.discountPrice,
+        unitPrice: item.price,
         quantity:item.quantity
       }
     })
@@ -305,7 +308,7 @@ if (session.url) {
                           ? item?.title.slice(0, 30) + "..."
                           : item?.title}
                       </p>
-                      <p>{item?.quantity * item?.discountPrice}/-PKR</p>
+                      <p>{item?.quantity * item?.price}/-PKR</p>
                     </div>
                   ))}
 
