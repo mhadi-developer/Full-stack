@@ -39,28 +39,30 @@ services:
         dockerfile: Dockerfile
       container_name: server_app
       ports:
-        - "7000:5000"
+        - "7000:7000"
       env_file:
         - ./Backend/.env
       restart: unless-stopped
       depends_on: 
        - mongodb
 
+   
+
+
+
 
   mongodb:
-    image: mongo:6
-    container_name: mongo_db
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin123
-      MONGO_INITDB_DATABASE: e-commerce
-    volumes:
-      - mongo_data:/data/db
-    restart: unless-stopped
-
-
+      image: mongo:6
+      container_name: mongo_db
+      ports:
+        - "27017:27017"
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: admin
+        MONGO_INITDB_ROOT_PASSWORD: admin123
+        MONGO_INITDB_DATABASE: e-store
+      volumes:
+        - mongo_data:/data/db
+      restart: always
 
 
 
