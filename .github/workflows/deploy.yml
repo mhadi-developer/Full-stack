@@ -59,10 +59,12 @@ jobs:
         working-directory: ./Backend
     steps:
       - uses: actions/checkout@v3
-      - run: npm install
-      - name: Deploy Backend to Railway
+      - name: Install Dependencies
+        run: npm install
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+      - name: Deploy to Railway
         env:
           RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
         run: |
-          npm install -g railway
-          railway up --detach --apiKey $RAILWAY_API_KEY
+          npx railway up --detach --apiKey $RAILWAY_API_KEY
