@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import Breadcrumb from '../components/Detail-page-component/BreadCrum.jsx'
+import Breadcrumb from "../components/Detail-page-component/Breadcrum.jsx"
 import Carousel from 'react-bootstrap/Carousel';
 import { useCart } from '../Custom-context/CartProvider';
 

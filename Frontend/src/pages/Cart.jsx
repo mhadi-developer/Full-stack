@@ -1,5 +1,5 @@
 import React from 'react'
-import Breadcrumb from '../components/Detail-page-component/BreadCrum.jsx'
+import Breadcrumb from "../components/Detail-page-component/Breadcrum.jsx"
 import { useCart } from '../Custom-context/CartProvider.jsx'
 import CartSummary from '../components/CartSummary.jsx';
 

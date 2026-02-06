@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Breadcrumb from '../components/Detail-page-component/BreadCrum.jsx'
+import Breadcrumb from '../components/Detail-page-component/Breadcrum.jsx'
 import { Link } from 'react-router';
 import { useCart } from '../Custom-context/CartProvider';
 import { useAuth } from '../Custom-context/AuthProvider';
