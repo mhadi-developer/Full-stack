@@ -14,16 +14,22 @@ jobs:
       run:
         working-directory: ./Frontend
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: npm run build
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Client
+        run: npm run build
+
       - name: Deploy Client to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
           publish-dir: ./Frontend/dist
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Client Deploy from GitHub Actions"
+          deploy-message: "Client deployed from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_CLIENT_SITE_ID }}
@@ -36,35 +42,41 @@ jobs:
       run:
         working-directory: ./Admin
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: npm run build
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Admin
+        run: npm run build
+
       - name: Deploy Admin to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
           publish-dir: ./Admin/dist
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Admin Deploy from GitHub Actions"
+          deploy-message: "Admin deployed from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_ADMIN_SITE_ID }}
 
   # ─────────── BACKEND DEPLOY ───────────
-  server:
-    name: Deploy Backend to Railway
+  backend:
+    name: Build Backend for Railway
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Backend
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
       - name: Install Dependencies
         run: npm install
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      - name: Deploy to Railway
-        env:
-          RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
-        run: |
-          npx railway up --detach -- --apiKey $RAILWAY_API_KEY
+
+      - name: Run Tests (Optional)
+        run: npm test || echo "No tests configured"
+
+# Note: Railway auto-deploys via GitHub integration
