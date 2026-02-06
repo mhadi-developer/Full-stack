@@ -67,4 +67,4 @@ jobs:
         env:
           RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
         run: |
-          npx railway up --detach --apiKey $RAILWAY_API_KEY
+          npx railway up --detach -- --apiKey $RAILWAY_API_KEY
