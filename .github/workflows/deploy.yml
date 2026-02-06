@@ -6,24 +6,43 @@ on:
 
 jobs:
 
+  # ─────────── CHECK CHANGES ───────────
+  changes:
+    name: Check Changed Folders
+    runs-on: ubuntu-latest
+    outputs:
+      client: ${{ steps.filter.outputs.client }}
+      admin: ${{ steps.filter.outputs.admin }}
+      server: ${{ steps.filter.outputs.server }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Detect Folder Changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            client:
+              - "Frontend/**"
+            admin:
+              - "Admin/**"
+            server:
+              - "Backend/**"
+
   # ─────────── CLIENT DEPLOY ───────────
   client:
     name: Deploy Client to Netlify
+    needs: changes
+    if: needs.changes.outputs.client == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Frontend
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build Client
-        run: npm run build
-
-      - name: Deploy Client to Netlify
+      - uses: actions/checkout@v3
+      - run: npm install
+      - run: npm run build
+      - name: Deploy Client
         uses: nwtgck/actions-netlify@v2
         with:
           publish-dir: ./Frontend/dist
@@ -37,21 +56,17 @@ jobs:
   # ─────────── ADMIN DEPLOY ───────────
   admin:
     name: Deploy Admin to Netlify
+    needs: changes
+    if: needs.changes.outputs.admin == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Admin
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build Admin
-        run: npm run build
-
-      - name: Deploy Admin to Netlify
+      - uses: actions/checkout@v3
+      - run: npm install
+      - run: npm run build
+      - name: Deploy Admin
         uses: nwtgck/actions-netlify@v2
         with:
           publish-dir: ./Admin/dist
@@ -63,20 +78,17 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_ADMIN_SITE_ID }}
 
   # ─────────── BACKEND DEPLOY ───────────
-  backend:
-    name: Build Backend for Railway
+  server:
+    name: Deploy Backend to Railway
+    needs: changes
+    if: needs.changes.outputs.server == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./Backend
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Run Tests (Optional)
-        run: npm test || echo "No tests configured"
-
-# Note: Railway auto-deploys via GitHub integration
+      - uses: actions/checkout@v3
+      - run: npm install
+      - name: Deploy Backend (Railway)
+        # If you use GitHub integration in Railway, you do NOT need the CLI
+        run: echo "Railway GitHub integration will auto-deploy the backend"
