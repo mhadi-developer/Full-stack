@@ -5,7 +5,6 @@ on:
     branches: [main]
 
 jobs:
-
   # ─────────── CHECK CHANGES ───────────
   changes:
     name: Detect Changes
@@ -48,11 +47,12 @@ jobs:
       - name: Netlify Deploy Client
         uses: nwtgck/actions-netlify@v2
         with:
-          publish-dir: ./Frontend/dist
+          publish-dir: Frontend/dist
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Client deployed from GitHub Actions"
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOCKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_CLIENT_SITE_ID }}
 
   # ─────────── ADMIN ───────────
@@ -63,19 +63,32 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./Admin
+        working-directory: Admin
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: Admin/package-lock.json
+
       - run: npm install
       - run: npm run build
 
-      - name: Netlify Deploy Admin
+      - name: Deploy Admin to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
-          publish-dir: ./Admin/dist
+          publish-dir: Admin/dist
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Admin deployed from GitHub Actions"
+        env:
+          NETLIFY_AUTH_TOCKEN: ${{ secrets.NETLIFY_AUTH_TOCKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_ADMIN_SITE_ID }}
+
   # ─────────── BACKEND ───────────
   server:
     needs: changes
@@ -83,5 +96,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger Railway Auto Deploy
-        run: echo "Backend updated. Railway will deploy automatically from GitHub integration."
+      - uses: actions/checkout@v3
+
+      - name: Notify Railway
+        run: echo "Backend changed. Railway GitHub integration will handle deployment."
